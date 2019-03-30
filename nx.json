@@ -16,6 +16,9 @@
     },
     "utils": {
       "tags": ["lib", "utils"]
+    },
+    "auth": {
+      "tags": ["lib", "auth"]
     }
   }
 }

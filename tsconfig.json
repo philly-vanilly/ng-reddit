@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ng-reddit/utils": ["libs/utils/src/index.ts"]
+      "@libs/*": ["libs/*"],
+      "@web/*": ["apps/web/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
