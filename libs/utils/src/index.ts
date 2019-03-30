@@ -1,2 +1,2 @@
-export { type } from './lib/action-type-cache';
-export { incrementalHttpRetry } from './lib/incremantal-http-retry';
+export * from './lib/action-type-cache';
+export * from './lib/incremantal-http-retry';

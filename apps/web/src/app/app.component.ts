@@ -1,37 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { debounceTime, takeUntil } from 'rxjs/operators';
+import { ReadService } from './read.service';
 
 @Component({
-  selector: 'web-root',
-  template: `
-    <div style="text-align:center">
-      <h1>Welcome to {{ title }}!</h1>
-      <img
-        width="450"
-        src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png"
-      />
-    </div>
-
-    <p>This is an Angular app built with <a href="https://nx.dev">Nx</a>.</p>
-    <p>🔎 **Nx is a set of Angular CLI power-ups for modern development.**</p>
-
-    <h2>Quick Start & Documentation</h2>
-
-    <ul>
-      <li>
-        <a href="https://nx.dev/getting-started/what-is-nx"
-          >30-minute video showing all Nx features</a
-        >
-      </li>
-      <li>
-        <a href="https://nx.dev/tutorial/01-create-application"
-          >Interactive tutorial</a
-        >
-      </li>
-    </ul>
-  `,
-
+  selector: 'web-app',
+  templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'web';
+export class AppComponent implements OnDestroy {
+  form: FormGroup;
+  term = new FormControl('', Validators.required);
+  options$ = new BehaviorSubject<string[]>([]);
+  destroy$ = new Subject();
+
+  constructor(
+    private fb: FormBuilder,
+    public readService: ReadService,
+    private router: Router
+  ) {
+    this.form = fb.group({
+      term: this.term
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+  }
+
+  onInputModelChange(): void {
+    this.readService.getAutocomplete(this.form.value.term)
+      .pipe(
+        debounceTime(100),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((res: string[]) => this.options$.next(res));
+  }
+
+  onFormSubmit(): void {
+    const subPath: string[] = (this.form.value.term as string).split('/').filter(el => el !== '');
+    this.router.navigate(subPath);
+  }
 }
