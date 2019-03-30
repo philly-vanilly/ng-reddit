@@ -52,6 +52,30 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "hmr": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/web/src/environments/environment.ts",
+                  "with": "apps/web/src/environments/environment.hmr.ts"
+                }
+              ]
+            },
+            "mock": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/web/src/environments/environment.ts",
+                  "with": "apps/web/src/environments/environment.mock.ts"
+                }
+              ]
+            },
+            "e2e": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/web/src/environments/environment.ts",
+                  "with": "apps/web/src/environments/environment.e2e.ts"
+                }
+              ]
             }
           }
         },
@@ -63,6 +87,12 @@
           "configurations": {
             "production": {
               "browserTarget": "web:build:production"
+            },
+            "mock": {
+              "browserTarget": "web:build:mock"
+            },
+            "hmr": {
+              "browserTarget": "web:build:hmr"
             }
           }
         },
@@ -107,6 +137,9 @@
           "configurations": {
             "production": {
               "devServerTarget": "web:serve:production"
+            },
+            "mock": {
+              "devServerTarget": "web:serve:mock"
             }
           }
         },

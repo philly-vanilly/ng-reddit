@@ -4,7 +4,6 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { BootstrapModuleFn, hmr, WebpackModule } from '@ngxs/hmr-plugin';
 
-/* tslint:disable */
 declare const module: WebpackModule;
 
 if (environment.production) {
