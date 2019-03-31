@@ -22,6 +22,9 @@
     },
     "ui-mat-header": {
       "tags": ["lib", "ui", "mat", "organism"]
+    },
+    "ui-mat-search": {
+      "tags": ["lib", "ui", "mat", "molecule"]
     }
   }
 }

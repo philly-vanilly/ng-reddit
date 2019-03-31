@@ -245,6 +245,37 @@
           "styleext": "scss"
         }
       }
+    },
+    "ui-mat-search": {
+      "root": "libs/ui/molecule/ui-mat-search",
+      "sourceRoot": "libs/ui/molecule/ui-mat-search/src",
+      "projectType": "library",
+      "prefix": "ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/molecule/ui-mat-search/tsconfig.lib.json",
+              "libs/ui/molecule/ui-mat-search/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/ui/molecule/ui-mat-search/jest.config.js",
+            "tsConfig": "libs/ui/molecule/ui-mat-search/tsconfig.spec.json",
+            "setupFile": "libs/ui/molecule/ui-mat-search/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/schematics:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {

@@ -1,15 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiMatHeaderComponent } from './ui-mat-header.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import {
-  MatAutocompleteModule,
   MatButtonModule,
-  MatIconModule,
-  MatInputModule,
-  MatToolbarModule
+  MatIconModule, MatToolbarModule
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
+import { UiMatSearchModule } from '@libs/ui/molecule/ui-mat-search/src';
 
 export interface HeaderAutocompleteOptions {
   value: string;
@@ -19,14 +16,11 @@ export interface HeaderAutocompleteOptions {
 @NgModule({
   imports: [
     CommonModule,
-
-    // For search
-    ReactiveFormsModule,
     MatToolbarModule,
+    // For app-button
     MatIconModule,
-    MatInputModule,
-    MatAutocompleteModule,
-
+    // For search
+    UiMatSearchModule,
     // For login
     MatButtonModule,
     RouterModule

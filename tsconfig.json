@@ -19,6 +19,9 @@
       "@web/*": ["apps/web/*"],
       "@ng-reddit/ui/organism/ui-mat-header": [
         "libs/ui/organism/ui-mat-header/src/index.ts"
+      ],
+      "@ng-reddit/ui/molecule/ui-mat-search": [
+        "libs/ui/molecule/ui-mat-search/src/index.ts"
       ]
     }
   },
