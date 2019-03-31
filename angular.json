@@ -92,6 +92,7 @@
               "browserTarget": "web:build:mock"
             },
             "hmr": {
+              "hmr": true,
               "browserTarget": "web:build:hmr"
             }
           }

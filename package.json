@@ -3,10 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "rebuild-node-sass": "npm rebuild node-sass",
     "ng": "ng",
     "start": "ng serve",
-    "start-hmr": "ng serve --configuration=hmr",
+    "hmr": "ng serve --configuration=hmr",
     "build": "ng build",
     "test": "ng test --coverage",
     "lint": "./node_modules/.bin/nx lint && ng lint",
