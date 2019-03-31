@@ -19,6 +19,9 @@
     },
     "auth": {
       "tags": ["lib", "auth"]
+    },
+    "ui-mat-header": {
+      "tags": ["lib", "ui", "mat", "organism"]
     }
   }
 }

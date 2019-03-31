@@ -1,20 +1,8 @@
-<mat-toolbar>
-  <mat-toolbar-row>
-    <span>Angular Client for Reddit</span>
-    <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
-      <mat-form-field>
-        <input type="text" matInput [formControl]="term" [matAutocomplete]="auto" (ngModelChange)="onInputModelChange()">
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of options$ | async" [value]="option">{{option}}</mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </form>
-
-    <span class="example-spacer"></span>
-    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
-    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>
-  </mat-toolbar-row>
-</mat-toolbar>
+<ui-mat-header
+  (inputModelChange)="headerInputModelChange($event)"
+  (formSubmit)="headerInputFormSubmit($event)"
+  [autocompleteOptions$]="autocompleteOptions$"
+></ui-mat-header>
 <!--<div style="text-align:center">-->
 <!--  <h1>Welcome</h1>-->
 <!--  <button routerLink="home">Go Home</button>-->

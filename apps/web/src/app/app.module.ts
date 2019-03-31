@@ -4,17 +4,17 @@ import { AppComponent } from './app.component';
 import { PreloadAllModules, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthConfig } from '@libs/auth/src/lib/auth-config';
-import { GestureConfig, MatAutocompleteModule, MatIconModule, MatInputModule, MatToolbarModule } from '@angular/material';
+import { GestureConfig } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
-import { ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../environments/environment';
 import { AuthModule, InitialAuthService } from '@libs/auth/src';
 import { ReadService } from './read.service';
+import { UiMatHeaderModule } from '@libs/ui/organism/ui-mat-header/src';
 
 
 const authConfig: AuthConfig = {
@@ -43,22 +43,12 @@ const routes = [
   }
 ];
 
-const toolbarModules = [
-  ReactiveFormsModule,
-  MatToolbarModule,
-  MatIconModule,
-  MatInputModule,
-  MatAutocompleteModule
-];
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     environment.useAnimations ? BrowserAnimationsModule : NoopAnimationsModule,
     HttpClientModule,
-    ...toolbarModules,
-    ReactiveFormsModule,
     RouterModule.forRoot(
       routes,
       {
@@ -91,7 +81,8 @@ const toolbarModules = [
       collapsed: true,
       logger: console
     }),
-    AuthModule.forRoot()
+    AuthModule.forRoot(),
+    UiMatHeaderModule
   ],
   providers: [
     InitialAuthService,

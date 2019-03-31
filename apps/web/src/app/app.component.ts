@@ -1,46 +1,38 @@
-import { Component, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { ReadService } from '@web/src/app/read.service';
 import { Router } from '@angular/router';
 import { debounceTime, takeUntil } from 'rxjs/operators';
-import { ReadService } from './read.service';
+import { HeaderAutocompleteOptions } from '@libs/ui/organism/ui-mat-header/src';
 
 @Component({
   selector: 'web-app',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnDestroy {
-  form: FormGroup;
-  term = new FormControl('', Validators.required);
-  options$ = new BehaviorSubject<string[]>([]);
-  destroy$ = new Subject();
+  autocompleteOptions$ = new BehaviorSubject<HeaderAutocompleteOptions[]>([]);
+  private destroy$ = new Subject();
 
   constructor(
-    private fb: FormBuilder,
     public readService: ReadService,
     private router: Router
   ) {
-    this.form = fb.group({
-      term: this.term
-    });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
   }
 
-  onInputModelChange(): void {
-    this.readService.getAutocomplete(this.form.value.term)
-      .pipe(
-        debounceTime(100),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((res: string[]) => this.options$.next(res));
+  headerInputModelChange(inputModel: string) {
+    this.readService.getAutocomplete(inputModel)
+      .pipe(debounceTime(100), takeUntil(this.destroy$))
+      .subscribe((res: HeaderAutocompleteOptions[]) => this.autocompleteOptions$.next(res));
   }
 
-  onFormSubmit(): void {
-    const subPath: string[] = (this.form.value.term as string).split('/').filter(el => el !== '');
+  headerInputFormSubmit(term: string) {
+    const subPath: string[] = term.split('/').filter(el => el !== '');
     this.router.navigate(subPath);
   }
 }

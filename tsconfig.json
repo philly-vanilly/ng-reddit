@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@libs/*": ["libs/*"],
-      "@web/*": ["apps/web/*"]
+      "@web/*": ["apps/web/*"],
+      "@ng-reddit/ui/organism/ui-mat-header": [
+        "libs/ui/organism/ui-mat-header/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
