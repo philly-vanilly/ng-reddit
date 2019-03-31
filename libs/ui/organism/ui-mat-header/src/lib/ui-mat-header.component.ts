@@ -14,8 +14,8 @@ import { HeaderAutocompleteOptions } from '@libs/ui/organism/ui-mat-header/src';
         </button>
         <ui-mat-search
           [autocompleteOptions$]="autocompleteOptions$"
-          (inputModelChange)="inputModelChange"
-          (formSubmit)="formSubmit"
+          (inputModelChange)="inputModelChange.emit($event)"
+          (formSubmit)="formSubmit.emit($event)"
         ></ui-mat-search>
         <button class="ui-mat-header_user-button" mat-button>Login</button>
       </mat-toolbar-row>
