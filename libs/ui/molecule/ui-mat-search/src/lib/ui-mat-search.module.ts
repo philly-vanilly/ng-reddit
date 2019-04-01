@@ -16,7 +16,7 @@ import {
     MatIconModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatButtonToggleModule,
+    MatButtonToggleModule
   ],
   declarations: [UiMatSearchComponent],
   exports: [UiMatSearchComponent]

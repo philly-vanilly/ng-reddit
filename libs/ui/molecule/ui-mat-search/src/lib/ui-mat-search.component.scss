@@ -1,18 +1,11 @@
-.ui-mat-header_search-form-wrapper {
-  flex-shrink: 1;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: row;
+
+.ui-mat-search_form {
   > mat-form-field {
+    font-size: 16px;
     flex-shrink: 1;
     flex-grow: 1;
-    font-size: 16px;
     padding-left: 10px;
     padding-right: 10px;
     width: calc(100% - 20px)!important;
-  }
-  > mat-button-toggle-group {
-    flex-shrink: 0;
-    flex-grow: 0;
   }
 }

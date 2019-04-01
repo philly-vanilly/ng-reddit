@@ -7,13 +7,15 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   selector: 'ui-mat-search',
   template: `
     <form
-      class="ui-mat-header_search-form-wrapper"
+      class="ui-mat-search_form"
       [formGroup]="form"
       (ngSubmit)="formSubmit.emit(form.value.term)"
     >
-      <mat-form-field>
-        <input
+      <mat-form-field appearance="outline">
+        <input 
           matInput
+          type="search"
+          [height]="35"
           [formControl]="term"
           [matAutocomplete]="auto"
           (ngModelChange)="inputModelChange.emit($event)"

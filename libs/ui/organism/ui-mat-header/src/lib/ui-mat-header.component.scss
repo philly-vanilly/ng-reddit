@@ -3,6 +3,11 @@
   flex-grow: 0;
 }
 
+.ui-mat-header_search {
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
 .ui-mat-header_app-button {
   padding: 0 5px 0 5px;
 }
