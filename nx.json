@@ -25,6 +25,9 @@
     },
     "ui-mat-search": {
       "tags": ["lib", "ui", "mat", "molecule"]
+    },
+    "ui-bootstrap-search": {
+      "tags": ["lib", "ui", "bootstrap", "molecule"]
     }
   }
 }

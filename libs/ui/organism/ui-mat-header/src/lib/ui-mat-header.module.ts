@@ -7,6 +7,7 @@ import {
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { UiMatSearchModule } from '@libs/ui/molecule/ui-mat-search/src';
+import { UiBootstrapSearchModule } from '@libs/ui/molecule/ui-bootstrap-search/src';
 
 export interface HeaderAutocompleteOptions {
   value: string;
@@ -20,7 +21,8 @@ export interface HeaderAutocompleteOptions {
     // For app-button
     MatIconModule,
     // For search
-    UiMatSearchModule,
+    // UiMatSearchModule,
+    UiBootstrapSearchModule,
     // For login
     MatButtonModule,
     RouterModule

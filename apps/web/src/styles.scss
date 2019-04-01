@@ -1,6 +1,10 @@
 // CUSTOM CSS
 @import 'assets/web-global';
 
+// BOOTSTRAP 4 => import in individual components with encapsulation ShadowDom or otherwise global styles will leak
+// and ruin Material Design
+// @import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
+
 // MATERIAL
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 // generated with https://materialtheme.arcsine.dev/

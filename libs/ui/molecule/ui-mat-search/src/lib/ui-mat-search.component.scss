@@ -1,9 +1,51 @@
+:host {
+  // to prevent inheritance from parent:
+  font: initial !important;
+  line-height: initial !important;
+  ::ng-deep {
+    .mat-form-field-wrapper {
+      padding: 0;
+    }
+    .mat-form-field-outline { // only with appearance="outline"
+      top: 0!important;
+    }
+    .mat-form-field-flex {
+      margin-top: 0!important;
+    }
+    .mat-form-field-infix {
+      //background-color: white;
+      padding: 10px 0 10px 0;
+      border: none;
+    }
+    .mat-form-field-prefix, .mat-form-field-suffix {
+      position: initial;
+    }
+    .mat-form-field-prefix {
+      letter-spacing: initial !important;
+      font-weight: bold;
+      padding-right: 10px;
+    }
+    .mat-form-field-suffix {
+      top: 1px!important;
+      position: relative!important;
+      bottom: 1px!important;
+      right: -11px!important;
+    }
+    mat-button-toggle {
+      padding: 2px
+    }
+  }
+}
+
+button {
+  //width: 0 !important;
+  //height: 0 !important;
+  //padding: 12px 0 8px 0;
+}
 
 .ui-mat-search_form {
   > mat-form-field {
     font-size: 16px;
-    flex-shrink: 1;
-    flex-grow: 1;
     padding-left: 10px;
     padding-right: 10px;
     width: calc(100% - 20px)!important;

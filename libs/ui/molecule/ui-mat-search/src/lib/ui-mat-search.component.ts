@@ -15,11 +15,28 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
         <input 
           matInput
           type="search"
-          [height]="35"
           [formControl]="term"
           [matAutocomplete]="auto"
           (ngModelChange)="inputModelChange.emit($event)"
         >
+        <span matPrefix>/r/all/</span>
+        <mat-button-toggle-group matSuffix #group="matButtonToggleGroup">
+          <mat-button-toggle value="left" aria-label="Text align left">
+            <mat-icon>format_align_left</mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="center" aria-label="Text align center">
+            <mat-icon>format_align_center</mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="right" aria-label="Text align right">
+            <mat-icon>format_align_right</mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="justify" disabled aria-label="Text align justify">
+            <mat-icon>format_align_justify</mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+<!--        <button mat-icon-button matSuffix>-->
+<!--          <mat-icon>search</mat-icon>-->
+<!--        </button>-->
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option
             [class.ui-mat-header_options--is-user]="option.isUser"

@@ -276,6 +276,37 @@
           "styleext": "scss"
         }
       }
+    },
+    "ui-bootstrap-search": {
+      "root": "libs/ui/organism/ui-bootstrap-search",
+      "sourceRoot": "libs/ui/organism/ui-bootstrap-search/src",
+      "projectType": "library",
+      "prefix": "ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ui/organism/ui-bootstrap-search/tsconfig.lib.json",
+              "libs/ui/organism/ui-bootstrap-search/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/ui/organism/ui-bootstrap-search/jest.config.js",
+            "tsConfig": "libs/ui/organism/ui-bootstrap-search/tsconfig.spec.json",
+            "setupFile": "libs/ui/organism/ui-bootstrap-search/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/schematics:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {

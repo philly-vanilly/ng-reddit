@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../../dist/out-tsc/libs/ui/organism/ui-bootstrap-search",
+    "module": "commonjs",
+    "types": ["jest", "node"]
+  },
+  "files": [
+    "src/test-setup.ts"
+  ],
+  "include": ["**/*.spec.ts", "**/*.d.ts"]
+}
