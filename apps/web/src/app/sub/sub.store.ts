@@ -1,4 +1,4 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { type } from '@libs/utils/src';
 import { SubPost } from '../models/subreddit-listing.model';
 import { ReadService } from '../read.service';
@@ -14,25 +14,25 @@ export class SubPostsGetSuccess {
 }
 
 export interface SubStateModel {
-  name: string;
-  posts: SubPost[];
+  [id:string]: {
+    subreddit: string;
+    user: string;
+    posts: SubPost[];
+  };
 }
 
 @State<SubStateModel>({
   name: 'sub',
-  defaults: {
-    name: undefined,
-    posts: []
-  }
+  defaults: {}
 })
 export class SubState {
-  @Selector() static doAnyExist(state: SubStateModel): boolean {
-    return state.posts.length > 0;
-  }
-
-  @Selector() static videos(state: SubStateModel): SubPost[] {
-    return state.posts.filter((sub: SubPost) => sub.is_video);
-  }
+  // @Selector() static doAnyExist(state: SubStateModel): boolean {
+  //   return Object.keys(state).length > 0;
+  // }
+  //
+  // @Selector() static videos(state: SubStateModel): SubPost[] {
+  //   return state.posts.filter((sub: SubPost) => sub.is_video);
+  // }
 
   constructor(
     private readService: ReadService
@@ -46,10 +46,17 @@ export class SubState {
 
   @Action(SubPostsGetSuccess) subPostsGetSuccess(ctx: StateContext<SubStateModel>, { payload }: SubPostsGetSuccess): void {
     const state = ctx.getState();
-    ctx.setState({
-      ...state,
-      posts: [...state.posts, ...payload]
+    payload.forEach((subPost: SubPost) => {
+      const id = subPost.id;
+      ctx.patchState({
+        id: {
+          subreddit: undefined,
+          user: undefined,
+          posts: undefined
+        }
+      });
     });
+
   }
 
 }

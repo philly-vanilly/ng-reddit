@@ -1,6 +1,15 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { AuthService } from './auth.service';
-import { AppActivateRefreshTimeout, AppLoginCall, AppLoginSuccess, UserClear, UserLoadFromStorage, UserLoginFailure, UserLoginSuccess } from './auth.actions';
+import {
+  AppActivateRefreshTimeout,
+  AppLoginCall,
+  AppLoginSuccess,
+  UserClear,
+  UserLoadFromStorage,
+  UserLoginCall,
+  UserLoginFailure,
+  UserLoginSuccess
+} from './auth.actions';
 
 export interface AuthStateModel {
   user?: {
@@ -37,6 +46,10 @@ export class AuthState {
   constructor(
     private authService: AuthService
   ) {}
+
+  @Action(UserLoginCall) userLoginCall(ctx:StateContext<AuthStateModel>) {
+    this.authService.loginUser();
+  }
 
   @Action(UserLoadFromStorage) userLoadFromStorage(ctx: StateContext<AuthStateModel>): void {
     const accessToken: string = sessionStorage.getItem('login_success_access_token');

@@ -1,6 +1,11 @@
 import { AppLoginResponse } from './app-login-response.model';
 import { type } from '@libs/utils/src';
 
+export class UserLoginCall {
+  static readonly type = type('[Auth] UserLoginCall');
+}
+
+
 export class UserLoadFromStorage {
   static readonly type = type('[Auth] UserLoadFromStorage');
 }

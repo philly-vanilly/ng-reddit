@@ -4,6 +4,8 @@ import { ReadService } from '@web/src/app/read.service';
 import { Router } from '@angular/router';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { HeaderAutocompleteOptions } from '@libs/ui/organism/ui-mat-header/src';
+import { UserLoginCall } from '@libs/auth/src';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'web-app',
@@ -17,9 +19,9 @@ export class AppComponent implements OnDestroy {
 
   constructor(
     public readService: ReadService,
-    private router: Router
-  ) {
-  }
+    private router: Router,
+    private store: Store
+  ) {}
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -34,5 +36,9 @@ export class AppComponent implements OnDestroy {
   headerInputFormSubmit(term: string) {
     const subPath: string[] = term.split('/').filter(el => el !== '');
     this.router.navigate(subPath);
+  }
+
+  userButtonClicked($event: any) {
+    this.store.dispatch(new UserLoginCall());
   }
 }

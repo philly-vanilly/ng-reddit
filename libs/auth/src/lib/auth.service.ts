@@ -18,10 +18,6 @@ export class AuthService {
     private store: Store
   ) {}
 
-  logout(): void {
-    this.store.dispatch(new UserClear());
-  }
-
   loginUser(): void {
     const state = btoa(new Date().toJSON());
     const scope = 'read';
