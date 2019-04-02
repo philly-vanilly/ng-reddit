@@ -3,7 +3,7 @@ mat-toolbar {
   min-height: unset !important;
 }
 
-.ui-mat-header_user-button, .ui-mat-header_app-button {
+.ui-mat-header_button {
   flex-shrink: 0;
   flex-grow: 0;
 }
@@ -14,7 +14,7 @@ mat-toolbar {
   flex-grow: 1;
 }
 
-.ui-mat-header_app-button-text {
+.ui-mat-header_app-button > span {
   font-weight: bold;
 }
 

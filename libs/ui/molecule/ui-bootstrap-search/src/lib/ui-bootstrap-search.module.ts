@@ -9,10 +9,10 @@ import {
   MatInputModule, MatRippleModule
 } from '@angular/material';
 import { ReactiveFormsModule } from '@angular/forms';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @NgModule({
   imports: [
-    CommonModule,
     CommonModule,
     ReactiveFormsModule,
     MatIconModule,
@@ -20,7 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatButtonToggleModule,
     MatInputModule,
     MatAutocompleteModule,
-    MatRippleModule
+    MatRippleModule,
+    A11yModule
   ],
   declarations: [UiBootstrapSearchComponent],
   exports: [UiBootstrapSearchComponent]

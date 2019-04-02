@@ -1,0 +1,30 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="formSubmit.emit(form.value.term)"
+  class="input-group">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">/r/all/</span>
+  </div>
+  <mat-form-field>
+    <input
+      type="search"
+      class="form-control"
+      placeholder="Content"
+      [matAutocomplete]="auto"
+      [formControl]="term"
+      (ngModelChange)="inputModelChange.emit($event)"
+    >
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        [class.ui-mat-header_options--is-user]="option.isUser"
+        *ngFor="let option of autocompleteOptions$ | async"
+        [value]="option.value">{{option.value}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <div class="input-group-append">
+        <span class="input-group-text" id="basic-addon2">
+          <mat-icon>search</mat-icon>
+        </span>
+  </div>
+</form>

@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewEncapsulation
 } from '@angular/core';
@@ -13,25 +12,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 
 @Component({
   selector: 'ui-bootstrap-search',
-  template: `
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon1">/r/all/</span>
-      </div>
-      <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username"
-             aria-describedby="basic-addon2">
-      <div class="input-group-append">
-        <div matRipple>
-          <span class="input-group-text" id="basic-addon2">
-            <mat-icon>search</mat-icon>
-          </span>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './ui-bootstrap-search.component.html',
   styleUrls: ['./ui-bootstrap-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom // otherwise bootstrap styles escape to the rest of the app
+  // TODO: change to ShadowDom when this isuue is fixed: https://github.com/angular/material2/issues/15606
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class UiBootstrapSearchComponent {
   @Input() autocompleteOptions$: Observable<HeaderAutocompleteOptions>;
@@ -46,4 +31,57 @@ export class UiBootstrapSearchComponent {
       term: this.term
     });
   }
+
+  states: string[] = [
+    'Alabama',
+    'Alaska',
+    'Arizona',
+    'Arkansas',
+    'California',
+    'Colorado',
+    'Connecticut',
+    'Delaware',
+    'Florida',
+    'Georgia',
+    'Hawaii',
+    'Idaho',
+    'Illinois',
+    'Indiana',
+    'Iowa',
+    'Kansas',
+    'Kentucky',
+    'Louisiana',
+    'Maine',
+    'Maryland',
+    'Massachusetts',
+    'Michigan',
+    'Minnesota',
+    'Mississippi',
+    'Missouri',
+    'Montana',
+    'Nebraska',
+    'Nevada',
+    'New Hampshire',
+    'New Jersey',
+    'New Mexico',
+    'New York',
+    'North Dakota',
+    'North Carolina',
+    'Ohio',
+    'Oklahoma',
+    'Oregon',
+    'Pennsylvania',
+    'Rhode Island',
+    'South Carolina',
+    'South Dakota',
+    'Tennessee',
+    'Texas',
+    'Utah',
+    'Vermont',
+    'Virginia',
+    'Washington',
+    'West Virginia',
+    'Wisconsin',
+    'Wyoming'
+  ];
 }

@@ -1,6 +1,23 @@
 @import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-//.input-group-append > .input-group-text {
-//  background-color: skyblue !important;
-//}
+.input-group-append, .input-group-prepend {
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+mat-form-field {
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+mat-form-field {
+  height: 0;
+}
+
+:host ::ng-deep {
+  .mat-form-field-infix {
+    padding: 0;
+    border: 0;
+  }
+}

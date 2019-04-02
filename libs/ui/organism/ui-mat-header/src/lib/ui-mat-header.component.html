@@ -1,0 +1,20 @@
+<mat-toolbar class="mat-elevation-z5">
+  <mat-toolbar-row>
+    <button class="ui-mat-header_app-button ui-mat-header_button" mat-flat-button disableRipple routerLink="/">
+      <mat-icon color="warn">accessible_forward</mat-icon>
+      <span>{{ documentTitle }}</span>
+    </button>
+    <ui-bootstrap-search
+      class="ui-mat-header_search"
+      [autocompleteOptions$]="autocompleteOptions$"
+      (inputModelChange)="inputModelChange.emit($event)"
+      (formSubmit)="formSubmit.emit($event)"
+    ></ui-bootstrap-search>
+    <button class="ui-mat-header_button" (click)="tabsButtonClicked.emit()" mat-icon-button>
+      <mat-icon>filter_1</mat-icon>
+    </button>
+    <button class="ui-mat-header_button" (click)="userButtonClicked.emit()" mat-icon-button>
+      <mat-icon>face</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
