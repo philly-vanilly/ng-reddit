@@ -27,7 +27,7 @@ const authConfig: AuthConfig = {
 
 // see https://www.intertech.com/Blog/angular-4-tutorial-run-code-during-app-initialization/
 const handleInitialAuth = (initialAuthService: InitialAuthService): Function => {
-  return () => initialAuthService.initializeAuth();
+  return () => initialAuthService.initAuth();
 };
 
 const routes = [

@@ -28,6 +28,9 @@
     },
     "ui-bootstrap-search": {
       "tags": ["lib", "ui", "bootstrap", "molecule"]
+    },
+    "entity": {
+      "tags": ["lib", "entity"]
     }
   }
 }

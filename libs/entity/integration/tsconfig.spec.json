@@ -1,0 +1,25 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "jasmine",
+      "node"
+    ],
+    "paths": {
+      "@ngxs-labs/entity-state": [
+        "src"
+      ],
+      "@ngxs-labs/entity-state/*": [
+        "src/*"
+      ]
+    }
+  },
+  "files": [
+    "test.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "**/*.spec.ts",
+    "**/*.d.ts"
+  ]
+}

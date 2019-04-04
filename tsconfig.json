@@ -25,7 +25,8 @@
       ],
       "@ng-reddit/ui/organism/ui-bootstrap-search": [
         "libs/ui/organism/ui-bootstrap-search/src/index.ts"
-      ]
+      ],
+      "@ng-reddit/entity": ["libs/entity/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
