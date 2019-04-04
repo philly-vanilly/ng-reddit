@@ -5,7 +5,7 @@ import { LOGIN_PRECEDING_LOCATION, LOGIN_ATTEMPT_STATE } from './auth.storage-ke
 import { Router, UrlTree } from '@angular/router';
 import { getDateWithSecondsOffset } from '@libs/auth/src/lib/auth-utility';
 
-class UserAuthData {
+export interface RedirectHashAuthData {
   access_token?: string;
   token_type?: string;
   state?: string;
@@ -37,16 +37,19 @@ export class InitialAuthService {
   private handlePossibleUserRedirect() {
     const {savedState, urlTreeSerialized} = getPreUserLoginDataFromStorage();
     const hashData: string = window.location.hash;
-    if (this.doesDataForUserLoginExistAndIsItStillValid(savedState, hashData)) {
-      const authData: UserAuthData = hashDataToKeyValuePairs(hashData);
-      if (this.isAuthDataCompleteAndStateValid(authData, savedState)) {
-        this.navigateToPreLoginLocation(urlTreeSerialized);
-        this.store.dispatch(new UserLoginSuccess({
-          accessToken: authData.access_token,
-          expiration: getExpirationDateFromAuthData(authData.state, authData.expires_in).toJSON()
-        }));
-      }
+    if (!this.doesDataForUserLoginExistAndIsItStillValid(savedState, hashData)) {
+      return;
     }
+    const authData: RedirectHashAuthData = hashDataToKeyValuePairs(hashData);
+    if (!authData && authData.state !== savedState) {
+      this.store.dispatch(new UserLoginFailure(`Login data not valid: ${JSON.stringify(authData)}`));
+      return;
+    }
+    this.navigateToPreLoginLocation(urlTreeSerialized);
+    this.store.dispatch(new UserLoginSuccess({
+      accessToken: authData.access_token,
+      expiration: getExpirationDateFromAuthData(authData.state, authData.expires_in).toJSON()
+    }));
   }
 
   private doesDataForUserLoginExistAndIsItStillValid(savedState: string, hashData: string): boolean {
@@ -61,15 +64,6 @@ export class InitialAuthService {
       }
     }
     return false;
-  };
-
-  private isAuthDataCompleteAndStateValid(authData: UserAuthData, savedState: string): boolean {
-    if (Object.keys(UserAuthData).every(key => authData[key]) && savedState && authData.state === savedState) {
-      return true;
-    } else {
-      this.store.dispatch(new UserLoginFailure(`Login data not valid: ${JSON.stringify(authData)}`));
-      return false;
-    }
   };
 
   private navigateToPreLoginLocation(urlTreeSerialized?: string): void {
@@ -91,7 +85,7 @@ const getPreUserLoginDataFromStorage = (): {savedState: string, urlTreeSerialize
   return {savedState, urlTreeSerialized};
 };
 
-export const hashDataToKeyValuePairs = (hashData: string): UserAuthData => {
+export const hashDataToKeyValuePairs = (hashData: string): RedirectHashAuthData | undefined => {
   const hashDataWithoutHash = hashData.replace(/#/g, '');
   const result = {};
   hashDataWithoutHash.split('&').forEach(pairString => {
@@ -100,7 +94,8 @@ export const hashDataToKeyValuePairs = (hashData: string): UserAuthData => {
       result[keyValuePair[0]] = keyValuePair[1];
     }
   });
-  return result;
+  const requiredProps = ['access_token', 'token_type', 'state', 'expires_in', 'scope'];
+  return requiredProps.every(key => result[key]) && Object.keys(result).every(key => requiredProps.includes(key)) ? result : undefined;
 };
 
 export const getExpirationDateFromAuthData = (state: string | undefined, expires_in: string | undefined): Date => {

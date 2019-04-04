@@ -1,5 +1,8 @@
-import { AuthAppStateModel, AuthUserStateModel, getExpirationDateFromAuthData } from '@libs/auth/src';
-import { getDateWithSecondsOffset, isTokenValid } from '@libs/auth/src/lib/auth-utility';
+import {
+  getExpirationDateFromAuthData,
+  hashDataToKeyValuePairs,
+  RedirectHashAuthData
+} from '@libs/auth/src';
 
 describe('InitialAuthService', () => {
   describe('getExpirationDateFromAuthData', () => {
@@ -87,8 +90,39 @@ describe('InitialAuthService', () => {
   });
 
   describe('hashDataToKeyValuePairs', () => {
-    it('should throw error on non-positive expiration', () => {
+    const access_token = '272076716164-Y6u57GLIE1DQDYRzUX1UKa6N5pE';
+    const token_type = 'bearer';
+    const state = 'MjAxOS0wNC0wNFQwOTowNDozNi42NDJa';
+    const expires_in = '3600';
+    const scope = 'read';
 
+    it('should convert valid hash-string to auth data', () => {
+      const dummyHash = `#access_token=${access_token}&token_type=${token_type}&state=${state}&expires_in=${expires_in}&scope=${scope}`;
+
+      const res: RedirectHashAuthData = hashDataToKeyValuePairs(dummyHash);
+
+      expect(res).toBeDefined();
+      expect(res.access_token).toBe(access_token);
+      expect(res.token_type).toBe(token_type);
+      expect(res.state).toBe(state);
+      expect(res.expires_in).toBe(expires_in);
+      expect(res.scope).toBe(scope);
+    });
+
+    it('should return undefined on not all required properties', () => {
+      const dummyHash = `#access_token=${access_token}`;
+
+      const res: RedirectHashAuthData = hashDataToKeyValuePairs(dummyHash);
+
+      expect(res).toBeUndefined();
+    });
+
+    it('should return undefined on too many properties', () => {
+      const dummyHash = `#foo=bar&access_token=${access_token}&token_type=${token_type}&state=${state}&expires_in=${expires_in}&scope=${scope}`;
+
+      const res: RedirectHashAuthData = hashDataToKeyValuePairs(dummyHash);
+
+      expect(res).toBeUndefined();
     });
   });
 });
