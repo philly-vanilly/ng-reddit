@@ -23,8 +23,8 @@
       "@ng-reddit/ui/molecule/ui-mat-search": [
         "libs/ui/molecule/ui-mat-search/src/index.ts"
       ],
-      "@ng-reddit/ui/organism/ui-bootstrap-search": [
-        "libs/ui/organism/ui-bootstrap-search/src/index.ts"
+      "@ng-reddit/ui/molecule/ui-bootstrap-search": [
+        "libs/ui/molecule/ui-bootstrap-search/src/index.ts"
       ],
       "@ng-reddit/entity": ["libs/entity/src/index.ts"]
     }

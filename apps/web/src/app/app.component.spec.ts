@@ -1,20 +1,29 @@
 import { async, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AuthConfig } from '@libs/auth/src/lib/auth-config';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxsModule } from '@ngxs/store';
-import { AuthState } from '@libs/auth/src/lib/auth.store';
-import { AuthService } from '@libs/auth/src';
+import { ReadService } from '@web/src/app/read.service';
+import { Router } from '@angular/router';
+import { MockComponent, MockModule } from 'ng-mocks';
+import { UiMatHeaderComponent } from '@libs/ui/organism/ui-mat-header/src/lib/ui-mat-header.component';
 
 describe('AppComponent', () => {
   beforeEach(
     async(() => {
       TestBed.configureTestingModule({
-        declarations: [AppComponent],
-        providers: [AuthService, AuthConfig],
-        // TODO: check if this can be reduced with ng-mocks
-        imports: [RouterTestingModule, HttpClientTestingModule, NgxsModule.forRoot([AuthState])]
+        declarations: [
+          AppComponent,
+          MockComponent(UiMatHeaderComponent)
+        ],
+        providers: [
+          {provide: ReadService, useValue: jest.fn()},
+          {provide: Router, useValue: jest.fn()},
+        ],
+        imports: [
+          RouterTestingModule, // needed for <router-outlet> (injected Router can be mocked)
+          // HttpClientTestingModule,
+          MockModule(NgxsModule.forRoot())
+        ]
       }).compileComponents();
     })
   );

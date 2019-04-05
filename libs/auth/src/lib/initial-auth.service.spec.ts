@@ -1,8 +1,16 @@
 import {
-  getExpirationDateFromAuthData,
-  hashDataToKeyValuePairs,
-  RedirectHashAuthData
+  AuthModule, AuthService,
+  AuthState,
+  getExpirationDateFromAuthData, getPreUserLoginDataFromStorage,
+  hashDataToKeyValuePairs, InitialAuthService,
+  RedirectHashAuthData, requestIsALoginRedirect
 } from '@libs/auth/src';
+import { async, getTestBed, TestBed } from '@angular/core/testing';
+import { NgxsModule, Store } from '@ngxs/store';
+import { ApplicationModule, Injector } from '@angular/core';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import { MockModule } from 'ng-mocks';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('InitialAuthService', () => {
   describe('getExpirationDateFromAuthData', () => {
@@ -123,6 +131,105 @@ describe('InitialAuthService', () => {
       const res: RedirectHashAuthData = hashDataToKeyValuePairs(dummyHash);
 
       expect(res).toBeUndefined();
+    });
+  });
+
+  describe('requestIsALoginRedirect', () => {
+    it('should return true on defined values', () => {
+      const savedState = 'foo';
+      const hashData = '#bar';
+
+      const result: boolean = requestIsALoginRedirect(savedState, hashData);
+
+      expect(result).toBeTruthy();
+    });
+
+    it('should return false on undefined savedState', () => {
+      const savedState = undefined;
+      const hashData = '#bar';
+
+      const result: boolean = requestIsALoginRedirect(savedState, hashData);
+
+      expect(result).toBeFalsy();
+    });
+
+    it('should return false on undefined hashData', () => {
+      const savedState = 'foo';
+      const hashData = undefined;
+
+      const result: boolean = requestIsALoginRedirect(savedState, hashData);
+
+      expect(result).toBeFalsy();
+    });
+
+    it('should return false on value-less hashData', () => {
+      const savedState = 'foo';
+      const hashData = '#';
+
+      const result: boolean = requestIsALoginRedirect(savedState, hashData);
+
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe('getPreUserLoginDataFromStorage', () => {
+    beforeEach(() => {
+      const store = {};
+      const mockLocalStorage = {
+        getItem: (key: string): string => {
+          return key in store ? store[key] : null;
+        },
+        removeItem: (key: string) => {
+          delete store[key];
+        },
+        setItem: (key: string, value: string) => {
+          store[key] = `${value}`;
+        }
+      };
+      spyOn(sessionStorage, 'getItem').and.callFake(mockLocalStorage.getItem);
+      spyOn(sessionStorage, 'removeItem').and.callFake(mockLocalStorage.removeItem);
+      spyOn(sessionStorage, 'setItem').and.callFake(mockLocalStorage.setItem);
+    });
+
+    it('should get valid data from storage and delete it afterwards', () => {
+      const storageTokenA = 'a';
+      const storageTokenB = 'b';
+      const storageValueA = 'x';
+      const storageValueB = 'y';
+
+      sessionStorage.setItem(storageTokenA, storageValueA);
+      sessionStorage.setItem(storageTokenB, storageValueB);
+      const {savedState, urlTreeSerialized} = getPreUserLoginDataFromStorage(storageTokenA, storageTokenB);
+      const storageItemAfterFunctionCallA = sessionStorage.getItem(storageTokenA);
+      const storageItemAfterFunctionCallB = sessionStorage.getItem(storageTokenB);
+
+      expect(savedState).toBe(storageValueA);
+      expect(urlTreeSerialized).toBe(storageValueB);
+      expect(storageItemAfterFunctionCallA).toBeNull();
+      expect(storageItemAfterFunctionCallB).toBeNull();
+    });
+  });
+
+  describe('initAuth', () => {
+    let store: Store;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          MockModule(NgxsModule.forRoot([AuthState]))
+        ],
+        providers: [
+          InitialAuthService,
+          Injector,
+          {provide: AuthService, useValue: jest.fn()}
+        ]
+      }).compileComponents();
+      store = TestBed.get(Store);
+    }));
+
+    it('should be created', () => {
+      const service: InitialAuthService = TestBed.get(InitialAuthService);
+      expect(service).toBeTruthy();
     });
   });
 });

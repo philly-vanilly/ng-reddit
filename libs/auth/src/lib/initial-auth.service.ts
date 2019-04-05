@@ -35,16 +35,26 @@ export class InitialAuthService {
   }
 
   private handlePossibleUserRedirect() {
-    const {savedState, urlTreeSerialized} = getPreUserLoginDataFromStorage();
+    const {savedState, urlTreeSerialized} = getPreUserLoginDataFromStorage(LOGIN_ATTEMPT_STATE, LOGIN_PRECEDING_LOCATION);
     const hashData: string = window.location.hash;
-    if (!this.doesDataForUserLoginExistAndIsItStillValid(savedState, hashData)) {
+    if (!requestIsALoginRedirect(savedState, hashData)) {
       return;
     }
+
+    const dateFromState: Date = new Date(atob(savedState));
+    const requestExpiration: Date = getDateWithSecondsOffset(3600, dateFromState);
+    if (requestExpiration <= new Date()) {
+      this.store.dispatch(new UserLoginFailure(`Request expired at: ${requestExpiration.toLocaleDateString()}`));
+      return;
+    }
+
     const authData: RedirectHashAuthData = hashDataToKeyValuePairs(hashData);
     if (!authData && authData.state !== savedState) {
       this.store.dispatch(new UserLoginFailure(`Login data not valid: ${JSON.stringify(authData)}`));
       return;
     }
+
+    // all checks passed...
     this.navigateToPreLoginLocation(urlTreeSerialized);
     this.store.dispatch(new UserLoginSuccess({
       accessToken: authData.access_token,
@@ -52,36 +62,27 @@ export class InitialAuthService {
     }));
   }
 
-  private doesDataForUserLoginExistAndIsItStillValid(savedState: string, hashData: string): boolean {
-    if (savedState && hashData && hashData.length > 1) { // > 1 because the char # is also included
-      const requestExpiration = new Date(atob(savedState));
-      getDateWithSecondsOffset(3600, requestExpiration);
-      requestExpiration.setMinutes(requestExpiration.getMinutes() + 60);
-      if (requestExpiration > new Date()) {
-        return true;
-      } else {
-        this.store.dispatch(new UserLoginFailure(`Request expired at: ${requestExpiration.toLocaleDateString()}`));
-      }
-    }
-    return false;
-  };
-
   private navigateToPreLoginLocation(urlTreeSerialized?: string): void {
+    const fallBack = () => history.pushState('', document.title, window.location.pathname + window.location.search);
     if (urlTreeSerialized) {
       const router: Router = this.injector.get(Router);
       const urlTree: UrlTree = router.parseUrl(urlTreeSerialized);
-      router.navigateByUrl(urlTree);
+      router.navigateByUrl(urlTree).catch(e => fallBack());
     } else {
-      history.pushState('', document.title, window.location.pathname + window.location.search);
+      fallBack();
     }
   }
 }
 
-const getPreUserLoginDataFromStorage = (): {savedState: string, urlTreeSerialized: string} => {
-  const savedState: string = sessionStorage.getItem(LOGIN_ATTEMPT_STATE);
-  sessionStorage.removeItem(LOGIN_ATTEMPT_STATE);
-  const urlTreeSerialized: string = sessionStorage.getItem(LOGIN_PRECEDING_LOCATION);
-  sessionStorage.removeItem(LOGIN_ATTEMPT_STATE);
+export const requestIsALoginRedirect = (savedState,  hashData): boolean =>
+  savedState && hashData && hashData.length > 1; // > 1 because the char # is also included
+
+export const getPreUserLoginDataFromStorage = (loginAttemptStateToken: string, loginPrecedingLocationToken):
+  {savedState: string, urlTreeSerialized: string} => {
+  const savedState: string = sessionStorage.getItem(loginAttemptStateToken);
+  sessionStorage.removeItem(loginAttemptStateToken);
+  const urlTreeSerialized: string = sessionStorage.getItem(loginPrecedingLocationToken);
+  sessionStorage.removeItem(loginPrecedingLocationToken);
   return {savedState, urlTreeSerialized};
 };
 

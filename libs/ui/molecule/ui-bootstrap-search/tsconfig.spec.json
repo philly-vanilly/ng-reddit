@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../../dist/out-tsc/libs/ui/organism/ui-bootstrap-search",
+    "outDir": "../../../../dist/out-tsc/libs/ui/molecule/ui-bootstrap-search",
     "module": "commonjs",
     "types": ["jest", "node"]
   },
