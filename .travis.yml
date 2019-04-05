@@ -12,7 +12,7 @@ script:
   - npm run lint
   - npm run test
   - ng e2e
-  - ng run web:build:production --configuration=production --base-href https://philly-vanilly.github.io/clients-for-reddit/
+  - ng run web:build:production --configuration=production --base-href https://philly-vanilly.github.io/ng-reddit/
 deploy:
   provider: pages
   skip_cleanup: true

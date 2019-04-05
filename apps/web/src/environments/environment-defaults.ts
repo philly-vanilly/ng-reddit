@@ -9,7 +9,7 @@ export const redditAuthConfigForLocalhost = {
 };
 
 export const redditAuthConfigForGithub = {
-  redirectURI: 'https://philly-vanilly.github.io/clients-for-reddit',
+  redirectURI: 'https://philly-vanilly.github.io/ng-reddit',
   clientID: 'MSpMOnO6gertnA'
 };
 
