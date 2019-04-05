@@ -34,6 +34,15 @@ export interface AuthStateModel {
 export class AuthState {
   private activeTimeout;
 
+  @Selector() static isUserTokenValid(state: AuthStateModel): boolean {
+    return isTokenValid(state.user);
+  }
+
+  @Selector() static isAppTokenValid(state: AuthStateModel): boolean {
+    return isTokenValid(state.app);
+  }
+
+
   constructor(
     private authService: AuthService
   ) {}
