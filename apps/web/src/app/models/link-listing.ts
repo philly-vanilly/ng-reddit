@@ -1,4 +1,4 @@
-import { Listing } from './listing-response.model';
+import { Listing } from './listing-response';
 
 export interface LinkListingChild {
   notification_level: string;

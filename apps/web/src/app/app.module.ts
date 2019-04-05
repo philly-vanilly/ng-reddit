@@ -3,7 +3,7 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { PreloadAllModules, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthConfig } from '@libs/auth/src/lib/auth-config';
+import { AuthConfig } from '@libs/auth/src/lib/models/auth-config';
 import { GestureConfig } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxsModule } from '@ngxs/store';

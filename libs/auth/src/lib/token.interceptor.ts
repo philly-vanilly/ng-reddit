@@ -1,11 +1,10 @@
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
-import { Select, Store } from '@ngxs/store';
-import { AuthStateModel, AuthState, AuthAppStateModel } from './auth.store';
+import { Store } from '@ngxs/store';
 import { AppNeedsToLoginCheck } from './auth.actions';
-import { filter } from 'rxjs/internal/operators/filter';
-import { isTokenValid } from '@libs/auth/src/lib/auth-utility';
+import { isTokenStillValidInSeconds } from '@libs/auth/src/lib/auth-utility';
+import { AuthAppStateModel } from '@libs/auth/src/lib/models/store-models';
 
 const makeModifiedRequest = (req: HttpRequest<any>, next: HttpHandler, token: string): Observable<HttpEvent<any>> => {
   const modifiedReq: HttpRequest<any> = req.clone({
@@ -22,7 +21,7 @@ export class TokenInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.url.startsWith('https://oauth.reddit.com')) {
       const authAppStateModel: AuthAppStateModel = this.store.selectSnapshot<AuthAppStateModel>(state => state.auth.app);
-      if (isTokenValid(authAppStateModel)) {
+      if (isTokenStillValidInSeconds(authAppStateModel, 30)) {
         return makeModifiedRequest(req, next, authAppStateModel.accessToken);
       } else {
         this.store.dispatch(new AppNeedsToLoginCheck());

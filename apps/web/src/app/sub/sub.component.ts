@@ -5,7 +5,7 @@ import { Select, Store } from '@ngxs/store';
 import { SubPostsGetCall, SubState } from './sub.store';
 import { AuthState } from '@libs/auth/src/lib/auth.store';
 import { filter, map } from 'rxjs/operators';
-import { SubPost } from '@web/src/app/models/subreddit-listing.model';
+import { SubPost } from '@web/src/app/models/subreddit-listing';
 import { ReadService } from '@web/src/app/read.service';
 import { PostState } from '@web/src/app/post.store';
 

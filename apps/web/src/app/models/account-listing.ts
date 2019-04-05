@@ -1,4 +1,4 @@
-import { Listing } from './listing-response.model';
+import { Listing } from './listing-response';
 
 export interface SubredditInAccount {
   default_set: boolean;

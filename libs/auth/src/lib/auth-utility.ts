@@ -7,7 +7,7 @@ export const getDateWithSecondsOffset = (offset: number, date: Date = new Date()
 };
 
 // should be valid for at least another 30 seconds
-export const isTokenValid = (appOrUser: AuthAppStateModel | AuthUserStateModel): boolean => {
+export const isTokenStillValidInSeconds = (appOrUser: AuthAppStateModel | AuthUserStateModel, offset): boolean => {
   return !!appOrUser && !!appOrUser.accessToken && !!appOrUser.expiration
-    && new Date(appOrUser.expiration) > getDateWithSecondsOffset(30);
+    && new Date(appOrUser.expiration) > getDateWithSecondsOffset(offset);
 };

@@ -1,5 +1,5 @@
 import { AuthAppStateModel, AuthUserStateModel } from '@libs/auth/src';
-import { getDateWithSecondsOffset, isTokenValid } from '@libs/auth/src/lib/auth-utility';
+import { getDateWithSecondsOffset, isTokenStillValidInSeconds } from '@libs/auth/src/lib/auth-utility';
 
 describe('AuthUtility', () => {
   describe('getDateWithSecondsOffset', () => {
@@ -15,7 +15,7 @@ describe('AuthUtility', () => {
     it('should return date-string from the past with negative offset', () => {
       const expectedDate = new Date();
 
-      const result: string = getDateWithSecondsOffset(-3600, expectedDate).toJSON();
+      const result: string = getDateWithSecondsOffset(-10, expectedDate).toJSON();
 
       expect(Date.parse(result)).toBeLessThan(expectedDate.getTime());
     });
@@ -23,7 +23,7 @@ describe('AuthUtility', () => {
     it('should return date-string from the future with positive offset', () => {
       const expectedDate = new Date();
 
-      const result: string = getDateWithSecondsOffset(3600, expectedDate).toJSON();
+      const result: string = getDateWithSecondsOffset(10, expectedDate).toJSON();
 
       expect(Date.parse(result)).toBeGreaterThan(expectedDate.getTime());
     });
@@ -37,23 +37,23 @@ describe('AuthUtility', () => {
     });
   });
 
-  describe('isTokenValid', () => {
+  describe('isTokenStillValidInSeconds', () => {
     it('should return true when token is valid', () => {
       const token: AuthAppStateModel | AuthUserStateModel = {
         accessToken: 'anything',
-        expiration: getDateWithSecondsOffset(3600).toJSON()
+        expiration: getDateWithSecondsOffset(10).toJSON()
       };
 
-      expect(isTokenValid(token)).toBeTruthy();
+      expect(isTokenStillValidInSeconds(token, 0)).toBeTruthy();
     });
 
     it('should return false when accessToken is missing', () => {
       const token: AuthAppStateModel | AuthUserStateModel = {
         accessToken: undefined,
-        expiration: getDateWithSecondsOffset(3600).toJSON()
+        expiration: getDateWithSecondsOffset(10).toJSON()
       };
 
-      expect(isTokenValid(token)).toBeFalsy();
+      expect(isTokenStillValidInSeconds(token, 0)).toBeFalsy();
     });
 
     it('should return false when expiration is missing', () => {
@@ -62,16 +62,34 @@ describe('AuthUtility', () => {
         expiration: undefined
       };
 
-      expect(isTokenValid(token)).toBeFalsy();
+      expect(isTokenStillValidInSeconds(token, 0)).toBeFalsy();
     });
 
     it('should return false when expired', () => {
       const token: AuthAppStateModel | AuthUserStateModel = {
         accessToken: 'anything',
-        expiration: getDateWithSecondsOffset(-3600).toJSON()
+        expiration: getDateWithSecondsOffset(-10).toJSON()
       };
 
-      expect(isTokenValid(token)).toBeFalsy();
+      expect(isTokenStillValidInSeconds(token, 0)).toBeFalsy();
+    });
+
+    it('should return false because too long positive offset', () => {
+      const token: AuthAppStateModel | AuthUserStateModel = {
+        accessToken: 'anything',
+        expiration: getDateWithSecondsOffset(10).toJSON()
+      };
+
+      expect(isTokenStillValidInSeconds(token, 20)).toBeFalsy();
+    });
+
+    it('should return true because negative offset (was valid in the past?)', () => {
+      const token: AuthAppStateModel | AuthUserStateModel = {
+        accessToken: 'anything',
+        expiration: getDateWithSecondsOffset(0).toJSON()
+      };
+
+      expect(isTokenStillValidInSeconds(token, -10)).toBeTruthy();
     });
   });
 });

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthConfig } from './auth-config';
+import { AuthConfig } from './models/auth-config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Store } from '@ngxs/store';
-import { AppLoginResponse } from './models/app-login-response.model';
+import { AppLoginResponse } from './models/reddit-login-responses';
 import { AppLoginSuccess } from './auth.actions';
 import { LOGIN_PRECEDING_LOCATION, LOGIN_ATTEMPT_STATE } from './auth.storage-keys';
 import { incrementalHttpRetry } from '@libs/utils/src';

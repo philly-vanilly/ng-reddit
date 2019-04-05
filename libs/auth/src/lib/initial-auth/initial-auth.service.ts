@@ -5,12 +5,12 @@ import { LOGIN_ATTEMPT_STATE, LOGIN_PRECEDING_LOCATION } from '@libs/auth/src/li
 import { Router, UrlTree } from '@angular/router';
 import { getDateWithSecondsOffset } from '@libs/auth/src/lib/auth-utility';
 import {
-  getExpirationDateFromAuthData,
   getAndDeleteTokenFromStorage,
+  getExpirationDateFromAuthData,
   hashDataToKeyValuePairs,
   requestIsALoginRedirect
 } from '@libs/auth/src/lib/initial-auth/initial-auth-helpers';
-import { UserLoginRedirectData } from '@libs/auth/src/lib/models/user-login-redirect-data.model';
+import { UserLoginRedirectData } from '@libs/auth/src/lib/models/reddit-login-responses';
 
 @Injectable()
 export class InitialAuthService {

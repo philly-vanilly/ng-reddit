@@ -2,30 +2,15 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { AuthService } from './auth.service';
 import {
   AppActivateRefreshTimeout,
-  AppNeedsToLoginCheck,
   AppLoginSuccess,
+  AppNeedsToLoginCheck,
   UserClear,
   UserLoginCall,
   UserLoginFailure,
   UserLoginSuccess
 } from './auth.actions';
-import { getDateWithSecondsOffset, isTokenValid } from '@libs/auth/src/lib/auth-utility';
-
-export interface AuthUserStateModel {
-  accessToken: string;
-  expiration: string;
-}
-
-export interface AuthAppStateModel {
-  accessToken: string;
-  expiration: string;
-  deviceId: string;
-}
-
-export interface AuthStateModel {
-  user?: AuthUserStateModel;
-  app?: AuthAppStateModel;
-}
+import { getDateWithSecondsOffset, isTokenStillValidInSeconds } from '@libs/auth/src/lib/auth-utility';
+import { AuthAppStateModel, AuthStateModel } from '@libs/auth/src/lib/models/store-models';
 
 @State<AuthStateModel>({
   name: 'auth',
@@ -35,11 +20,11 @@ export class AuthState {
   private activeTimeout;
 
   @Selector() static isUserTokenValid(state: AuthStateModel): boolean {
-    return isTokenValid(state.user);
+    return isTokenStillValidInSeconds(state.user, 30);
   }
 
   @Selector() static isAppTokenValid(state: AuthStateModel): boolean {
-    return isTokenValid(state.app);
+    return isTokenStillValidInSeconds(state.app, 30);
   }
 
 
@@ -65,7 +50,7 @@ export class AuthState {
 
   @Action(AppNeedsToLoginCheck) appNeedsToLoginCheck(ctx: StateContext<AuthStateModel>): void {
     const appState: AuthAppStateModel = ctx.getState().app;
-    if (!isTokenValid(appState)) {
+    if (!isTokenStillValidInSeconds(appState, 1200)) { // 20 min
       this.authService.loginApp();
     }
   }
@@ -83,8 +68,9 @@ export class AuthState {
     if (this.activeTimeout) {
       clearTimeout(this.activeTimeout);
     }
+    // refresh 2 min before expiration
     const expirationDate: Date = new Date(ctx.getState().app.expiration);
-    const timeToWait: number = expirationDate.getTime() - new Date().getTime() - 120000; // 2 min
-    this.activeTimeout = setTimeout(() => ctx.dispatch(new AppNeedsToLoginCheck()), timeToWait);
+    const msToWait: number = expirationDate.getTime() - getDateWithSecondsOffset(-120).getTime();
+    this.activeTimeout = setTimeout(() => ctx.dispatch(new AppNeedsToLoginCheck()), msToWait);
   }
 }

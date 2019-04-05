@@ -1,6 +1,6 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { type } from '@libs/utils/src';
-import { SubPost } from '../models/subreddit-listing.model';
+import { SubPost } from '../models/subreddit-listing';
 import { ReadService } from '../read.service';
 import { Add } from '@libs/entity/src';
 import { TodoState } from '@libs/entity/integration/app/store/todo';

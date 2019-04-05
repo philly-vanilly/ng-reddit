@@ -1,5 +1,5 @@
 import { getDateWithSecondsOffset } from '@libs/auth/src/lib/auth-utility';
-import { UserLoginRedirectData } from '@libs/auth/src/lib/models/user-login-redirect-data.model';
+import { UserLoginRedirectData } from '@libs/auth/src/lib/models/reddit-login-responses';
 
 export const requestIsALoginRedirect = (savedState, hashData): boolean =>
   savedState && hashData && hashData.length > 1; // > 1 because the char # is also included

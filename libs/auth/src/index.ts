@@ -1,9 +1,9 @@
 export * from './lib/auth.module';
 export * from './lib/auth.actions';
-export * from './lib/models/app-login-response.model';
+export * from './lib/models/reddit-login-responses';
 export * from './lib/auth.store';
 export * from './lib/initial-auth/initial-auth.service';
-export * from './lib/auth-config';
+export * from './lib/models/auth-config';
 export * from './lib/token.interceptor';
 export * from './lib/auth.module';
 export * from './lib/auth.service';
@@ -11,4 +11,7 @@ export { getExpirationDateFromAuthData } from '@libs/auth/src/lib/initial-auth/i
 export { hashDataToKeyValuePairs } from '@libs/auth/src/lib/initial-auth/initial-auth-helpers';
 export { getAndDeleteTokenFromStorage } from '@libs/auth/src/lib/initial-auth/initial-auth-helpers';
 export { requestIsALoginRedirect } from '@libs/auth/src/lib/initial-auth/initial-auth-helpers';
-export { UserLoginRedirectData } from '@libs/auth/src/lib/models/user-login-redirect-data.model';
+export { UserLoginRedirectData } from '@libs/auth/src/lib/models/reddit-login-responses';
+export { AuthStateModel } from '@libs/auth/src/lib/models/store-models';
+export { AuthAppStateModel } from '@libs/auth/src/lib/models/store-models';
+export { AuthUserStateModel } from '@libs/auth/src/lib/models/store-models';

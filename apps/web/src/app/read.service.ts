@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ListingResponse } from './models/listing-response.model';
-import { AccountListing } from './models/account-listing.model';
-import { LinkListing } from './models/link-listing.model';
-import { SubPost, SubredditListing } from './models/subreddit-listing.model';
+import { ListingResponse } from './models/listing-response';
+import { AccountListing } from './models/account-listing';
+import { LinkListing } from './models/link-listing';
+import { SubPost, SubredditListing } from './models/subreddit-listing';
 import { HeaderAutocompleteOptions } from '@libs/ui/organism/ui-mat-header/src';
 
 

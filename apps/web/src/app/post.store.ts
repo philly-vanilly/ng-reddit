@@ -1,6 +1,6 @@
 import { State } from '@ngxs/store';
 import { defaultEntityState, EntityState, EntityStateModel, IdStrategy } from '@libs/entity/src';
-import { SubPost } from '@web/src/app/models/subreddit-listing.model';
+import { SubPost } from '@web/src/app/models/subreddit-listing';
 
 @State<EntityStateModel<SubPost>>({
   name: 'post',

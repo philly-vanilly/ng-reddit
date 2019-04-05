@@ -1,4 +1,4 @@
-import { AppLoginResponse } from './models/app-login-response.model';
+import { AppLoginResponse } from './models/reddit-login-responses';
 import { type } from '@libs/utils/src';
 import { AuthUserStateModel } from '@libs/auth/src';
 

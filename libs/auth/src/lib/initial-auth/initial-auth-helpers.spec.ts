@@ -1,17 +1,10 @@
 import {
-  AuthService,
-  AuthState,
-  getExpirationDateFromAuthData,
   getAndDeleteTokenFromStorage,
+  getExpirationDateFromAuthData,
   hashDataToKeyValuePairs,
-  InitialAuthService,
   requestIsALoginRedirect,
   UserLoginRedirectData
 } from '@libs/auth/src';
-import { async, TestBed } from '@angular/core/testing';
-import { NgxsModule, Store } from '@ngxs/store';
-import { Injector } from '@angular/core';
-import { MockModule } from 'ng-mocks';
 
 describe('InitialAuthHelpers', () => {
   describe('getExpirationDateFromAuthData', () => {
