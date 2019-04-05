@@ -2,13 +2,14 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { AuthService } from './auth.service';
 import {
   AppActivateRefreshTimeout,
-  AppLoginCall,
+  AppNeedsToLoginCheck,
   AppLoginSuccess,
   UserClear,
   UserLoginCall,
   UserLoginFailure,
   UserLoginSuccess
 } from './auth.actions';
+import { getDateWithSecondsOffset, isTokenValid } from '@libs/auth/src/lib/auth-utility';
 
 export interface AuthUserStateModel {
   accessToken: string;
@@ -53,8 +54,11 @@ export class AuthState {
     ctx.patchState({ user: undefined });
   }
 
-  @Action(AppLoginCall) appLoginCall(ctx: StateContext<AuthStateModel>): void {
-    this.authService.loginApp();
+  @Action(AppNeedsToLoginCheck) appNeedsToLoginCheck(ctx: StateContext<AuthStateModel>): void {
+    const appState: AuthAppStateModel = ctx.getState().app;
+    if (!isTokenValid(appState)) {
+      this.authService.loginApp();
+    }
   }
 
   @Action(AppLoginSuccess) appLoginSuccess(ctx: StateContext<AuthStateModel>, { payload }: AppLoginSuccess): void {
@@ -72,6 +76,6 @@ export class AuthState {
     }
     const expirationDate: Date = new Date(ctx.getState().app.expiration);
     const timeToWait: number = expirationDate.getTime() - new Date().getTime() - 120000; // 2 min
-    this.activeTimeout = setTimeout(() => ctx.dispatch(new AppLoginCall()), timeToWait);
+    this.activeTimeout = setTimeout(() => ctx.dispatch(new AppNeedsToLoginCheck()), timeToWait);
   }
 }

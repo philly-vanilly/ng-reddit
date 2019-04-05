@@ -1,4 +1,4 @@
-import { AppLoginResponse } from './app-login-response.model';
+import { AppLoginResponse } from './models/app-login-response.model';
 import { type } from '@libs/utils/src';
 import { AuthUserStateModel } from '@libs/auth/src';
 
@@ -26,14 +26,13 @@ export class UserClear {
   static readonly type = type('[Auth] UserClear');
 }
 
-export class AppLoginCall {
-  static readonly type = type('[Auth] AppLoginCall');
+export class AppNeedsToLoginCheck {
+  static readonly type = type('[Auth] AppNeedsToLoginCheck');
 }
 
 export class AppLoginSuccess {
   static readonly type = type('[Auth] AppLoginSuccess');
 
-  // {"access_token":"-53uGkwPRVy3qiSXpUOGQurUOLJs","token_type":"bearer","device_id":"DO_NOT_TRACK_THIS_DEVICE","expires_in":3600,"scope":"*"}
   constructor(public payload: AppLoginResponse) {}
 }
 

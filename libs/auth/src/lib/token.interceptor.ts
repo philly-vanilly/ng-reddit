@@ -3,7 +3,7 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import { EMPTY, Observable } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { AuthStateModel, AuthState, AuthAppStateModel } from './auth.store';
-import { AppLoginCall } from './auth.actions';
+import { AppNeedsToLoginCheck } from './auth.actions';
 import { filter } from 'rxjs/internal/operators/filter';
 import { isTokenValid } from '@libs/auth/src/lib/auth-utility';
 
@@ -18,8 +18,7 @@ export class TokenInterceptor implements HttpInterceptor {
       if (isTokenValid(authAppStateModel)) {
         return makeModifiedRequest(req, next, authAppStateModel.accessToken);
       } else {
-        console.log("NOT VALID?");
-        this.store.dispatch(new AppLoginCall());
+        this.store.dispatch(new AppNeedsToLoginCheck());
         return EMPTY;
       }
     }

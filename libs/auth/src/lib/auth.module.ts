@@ -4,7 +4,6 @@ import { AuthState } from './auth.store';
 import { TokenInterceptor } from './token.interceptor';
 import { CorsInterceptor } from './cors.interceptor';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
 import { NgxsModule } from '@ngxs/store';
 
 @NgModule({
@@ -30,8 +29,7 @@ export class AuthModule {
           useClass: CorsInterceptor,
           multi: true
         },
-        AuthService,
-        AuthGuard
+        AuthService
       ]
     };
   }

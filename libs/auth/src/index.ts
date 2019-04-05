@@ -1,10 +1,14 @@
 export * from './lib/auth.module';
 export * from './lib/auth.actions';
-export * from './lib/app-login-response.model';
+export * from './lib/models/app-login-response.model';
 export * from './lib/auth.store';
-export * from './lib/initial-auth.service';
+export * from './lib/initial-auth/initial-auth.service';
 export * from './lib/auth-config';
 export * from './lib/token.interceptor';
 export * from './lib/auth.module';
 export * from './lib/auth.service';
-export * from './lib/auth.guard';
+export { getExpirationDateFromAuthData } from '@libs/auth/src/lib/initial-auth/initial-auth-helpers';
+export { hashDataToKeyValuePairs } from '@libs/auth/src/lib/initial-auth/initial-auth-helpers';
+export { getAndDeleteTokenFromStorage } from '@libs/auth/src/lib/initial-auth/initial-auth-helpers';
+export { requestIsALoginRedirect } from '@libs/auth/src/lib/initial-auth/initial-auth-helpers';
+export { UserLoginRedirectData } from '@libs/auth/src/lib/models/user-login-redirect-data.model';

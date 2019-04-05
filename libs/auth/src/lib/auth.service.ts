@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthConfig } from './auth-config';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Store } from '@ngxs/store';
-import { AppLoginResponse } from './app-login-response.model';
+import { AppLoginResponse } from './models/app-login-response.model';
 import { AppLoginSuccess } from './auth.actions';
 import { LOGIN_PRECEDING_LOCATION, LOGIN_ATTEMPT_STATE } from './auth.storage-keys';
 import { incrementalHttpRetry } from '@libs/utils/src';

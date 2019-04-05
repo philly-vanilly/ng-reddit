@@ -1,18 +1,19 @@
 import {
-  AuthModule, AuthService,
+  AuthService,
   AuthState,
-  getExpirationDateFromAuthData, getPreUserLoginDataFromStorage,
-  hashDataToKeyValuePairs, InitialAuthService,
-  RedirectHashAuthData, requestIsALoginRedirect
+  getExpirationDateFromAuthData,
+  getAndDeleteTokenFromStorage,
+  hashDataToKeyValuePairs,
+  InitialAuthService,
+  requestIsALoginRedirect,
+  UserLoginRedirectData
 } from '@libs/auth/src';
-import { async, getTestBed, TestBed } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
-import { ApplicationModule, Injector } from '@angular/core';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+import { Injector } from '@angular/core';
 import { MockModule } from 'ng-mocks';
-import { RouterTestingModule } from '@angular/router/testing';
 
-describe('InitialAuthService', () => {
+describe('InitialAuthHelpers', () => {
   describe('getExpirationDateFromAuthData', () => {
     // as date: '2019-04-03T21:17:46.932Z'
     const expirationDateBase64Valid = 'MjAxOS0wNC0wM1QyMToxNzo0Ni45MzJa';
@@ -107,7 +108,7 @@ describe('InitialAuthService', () => {
     it('should convert valid hash-string to auth data', () => {
       const dummyHash = `#access_token=${access_token}&token_type=${token_type}&state=${state}&expires_in=${expires_in}&scope=${scope}`;
 
-      const res: RedirectHashAuthData = hashDataToKeyValuePairs(dummyHash);
+      const res: UserLoginRedirectData = hashDataToKeyValuePairs(dummyHash);
 
       expect(res).toBeDefined();
       expect(res.access_token).toBe(access_token);
@@ -120,7 +121,7 @@ describe('InitialAuthService', () => {
     it('should return undefined on not all required properties', () => {
       const dummyHash = `#access_token=${access_token}`;
 
-      const res: RedirectHashAuthData = hashDataToKeyValuePairs(dummyHash);
+      const res: UserLoginRedirectData = hashDataToKeyValuePairs(dummyHash);
 
       expect(res).toBeUndefined();
     });
@@ -128,7 +129,7 @@ describe('InitialAuthService', () => {
     it('should return undefined on too many properties', () => {
       const dummyHash = `#foo=bar&access_token=${access_token}&token_type=${token_type}&state=${state}&expires_in=${expires_in}&scope=${scope}`;
 
-      const res: RedirectHashAuthData = hashDataToKeyValuePairs(dummyHash);
+      const res: UserLoginRedirectData = hashDataToKeyValuePairs(dummyHash);
 
       expect(res).toBeUndefined();
     });
@@ -172,7 +173,7 @@ describe('InitialAuthService', () => {
     });
   });
 
-  describe('getPreUserLoginDataFromStorage', () => {
+  describe('getAndDeleteTokenFromStorage', () => {
     beforeEach(() => {
       const store = {};
       const mockLocalStorage = {
@@ -199,37 +200,15 @@ describe('InitialAuthService', () => {
 
       sessionStorage.setItem(storageTokenA, storageValueA);
       sessionStorage.setItem(storageTokenB, storageValueB);
-      const {savedState, urlTreeSerialized} = getPreUserLoginDataFromStorage(storageTokenA, storageTokenB);
+      const resultA = getAndDeleteTokenFromStorage(storageTokenA);
+      const resultB = getAndDeleteTokenFromStorage(storageTokenB);
       const storageItemAfterFunctionCallA = sessionStorage.getItem(storageTokenA);
       const storageItemAfterFunctionCallB = sessionStorage.getItem(storageTokenB);
 
-      expect(savedState).toBe(storageValueA);
-      expect(urlTreeSerialized).toBe(storageValueB);
+      expect(resultA).toBe(storageValueA);
+      expect(resultB).toBe(storageValueB);
       expect(storageItemAfterFunctionCallA).toBeNull();
       expect(storageItemAfterFunctionCallB).toBeNull();
-    });
-  });
-
-  describe('initAuth', () => {
-    let store: Store;
-
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          MockModule(NgxsModule.forRoot([AuthState]))
-        ],
-        providers: [
-          InitialAuthService,
-          Injector,
-          {provide: AuthService, useValue: jest.fn()}
-        ]
-      }).compileComponents();
-      store = TestBed.get(Store);
-    }));
-
-    it('should be created', () => {
-      const service: InitialAuthService = TestBed.get(InitialAuthService);
-      expect(service).toBeTruthy();
     });
   });
 });
