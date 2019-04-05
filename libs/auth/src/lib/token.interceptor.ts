@@ -7,6 +7,13 @@ import { AppNeedsToLoginCheck } from './auth.actions';
 import { filter } from 'rxjs/internal/operators/filter';
 import { isTokenValid } from '@libs/auth/src/lib/auth-utility';
 
+const makeModifiedRequest = (req: HttpRequest<any>, next: HttpHandler, token: string): Observable<HttpEvent<any>> => {
+  const modifiedReq: HttpRequest<any> = req.clone({
+    headers: req.headers.set('Authorization', `bearer ${token}`)
+  });
+  return next.handle(modifiedReq);
+};
+
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   constructor(private store: Store) {}
@@ -26,9 +33,3 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 }
 
-const makeModifiedRequest = (req: HttpRequest<any>, next: HttpHandler, token: string): Observable<HttpEvent<any>> => {
-  const modifiedReq: HttpRequest<any> = req.clone({
-    headers: req.headers.set('Authorization', `bearer ${token}`)
-  });
-  return next.handle(modifiedReq);
-};
