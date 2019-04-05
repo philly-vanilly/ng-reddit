@@ -1,9 +1,8 @@
-import { getGreeting } from '../support/app.po';
 
-describe('Hello Nx', () => {
+describe('App', () => {
   beforeEach(() => cy.visit('/'));
 
-  it('should display welcome message', () => {
-    getGreeting().contains('Welcome to web!');
+  it('should display correct title', () => {
+    cy.title().should('eq', 'helppit');
   });
 });
