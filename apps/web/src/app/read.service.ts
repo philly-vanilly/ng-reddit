@@ -41,7 +41,7 @@ export class ReadService {
   }
 
   getSubreddit(subName: string): Observable<SubPost[]> {
-    const reqUrl = `https://oauth.reddit.com${subName}/hot`;
+    const reqUrl = `https://oauth.reddit.com/r/${subName}/hot`;
     return this.http.get<ListingResponse>(reqUrl).pipe(
       map((res: ListingResponse) => (res.data.children as SubredditListing[])
         .map((listing: SubredditListing) => listing.data))

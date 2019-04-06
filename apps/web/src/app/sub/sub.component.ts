@@ -2,35 +2,29 @@ import { Component, OnDestroy } from '@angular/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { SubPostsGetCall, SubState } from '@web/src/app/store/sub.store';
+import { Sub, SubPostsGetCall, SubState } from '@web/src/app/store/sub.store';
 import { AuthState } from '@libs/auth/src/lib/auth.store';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { SubPost } from '@web/src/app/models/subreddit-listing';
 import { ReadService } from '@web/src/app/read.service';
 import { PostState } from '@web/src/app/store/post.store';
+import { tap } from 'rxjs/internal/operators/tap';
 
 @Component({
   selector: 'web-sub',
   template: `
-    <ng-container *ngIf="(count$ | async) > 0">
-      <pre *ngFor="let post of (posts$ | async)">{{ post | json }}</pre>
+    <ng-container *ngIf="(filteredPosts$ | async) > 0">
+      <pre *ngFor="let post of (filteredPosts$ | async)">{{ post | json }}</pre>
     </ng-container>
   `,
   styles: [``]
 })
 export class SubComponent implements OnDestroy {
-  @Select(PostState.size) count$: Observable<number>;
   @Select(PostState.entities) posts$: Observable<SubPost[]>;
-  @Select(PostState.active) active$: Observable<SubPost>;
-  @Select(PostState.activeId) activeId$: Observable<string>;
-  @Select(PostState.keys) keys$: Observable<string[]>;
-  @Select(PostState.loading) loading$: Observable<boolean>;
-  @Select(PostState.error) error$: Observable<Error | undefined>;
-  @Select(PostState.latestId) latestId$: Observable<string>;
-  @Select(PostState.latest) latest$: Observable<SubPost>;
-
-
+  @Select(SubState.entities) subs$: Observable<Sub[]>;
   @Select(AuthState.isAppTokenValid) private isAppTokenValid$: Observable<boolean>;
+  filteredPosts$: Observable<SubPost[]>;
+
   destroy$ = new Subject();
 
   constructor(
@@ -38,15 +32,28 @@ export class SubComponent implements OnDestroy {
     private readService: ReadService,
     private store: Store
   ) {
-    combineLatest(this.router.events, this.isAppTokenValid$)
-      .pipe(filter(([event, isValid]) => event instanceof NavigationEnd && isValid))
-      .subscribe((pair: any[]) => {
-        this.store.dispatch(new SubPostsGetCall(pair[0].url));
-      }
-    );
+    this.filteredPosts$ = combineLatest(this.router.events, this.isAppTokenValid$)
+      .pipe(
+        filter(([event, isValid]) => event instanceof NavigationEnd && isValid),
+        map((pair: any[]) => (pair[0] as NavigationEnd).url.replace('/r/', '')),
+        tap((subName: string) => this.store.dispatch(new SubPostsGetCall(subName))),
+        switchMap((subName: string) => this.subs$.pipe(
+          tap(subs => console.log("SUBS " + JSON.stringify(subs))),
+          map((subs: Sub[]) => subs.find((sub: Sub) => sub.subName === subName)),
+          tap(sub => console.log("SUB " + sub)),
+          filter((sub: Sub) => !!sub),
+          map((sub: Sub) => sub.ids),
+          switchMap((ids: string[]) => this.posts$.pipe(
+            map((posts: SubPost[]) => posts.filter((post: SubPost) => ids.includes(post.id))) // TODO: instead of filter use sort
+          ))
+        ))
+      );
+    this.filteredPosts$.subscribe(res => console.log(res));
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
   }
+
+
 }

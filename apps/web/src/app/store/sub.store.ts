@@ -1,11 +1,9 @@
-import { Action, Select, State, StateContext } from '@ngxs/store';
+import { Action, createSelector, Select, Selector, State, StateContext } from '@ngxs/store';
 import { type } from '@libs/utils/src';
 import { SubPost } from '../models/subreddit-listing';
 import { ReadService } from '../read.service';
-import { Add, CreateOrReplace, defaultEntityState, EntityState, EntityStateModel, IdStrategy } from '@libs/entity/src';
-import { Observable } from 'rxjs';
+import { CreateOrReplace, defaultEntityState, EntityState, EntityStateModel, IdStrategy } from '@libs/entity/src';
 import { PostState } from '@web/src/app/store/post.store';
-import { ToDo, TodoState } from '@libs/entity/integration/app/store/todo';
 
 export class SubPostsGetCall {
   static readonly type = type('[Sub] PostsGetCall');
@@ -22,10 +20,9 @@ export class SubPostsGetFailure {
 }
 
 export interface Sub {
-  link: string;
+  subName: string;
   isLoading: boolean;
-  isActive: boolean;
-  // ids: string[];
+  ids: string[];
 }
 
 @State<EntityStateModel<Sub>>({
@@ -42,6 +39,18 @@ export interface Sub {
   // lastUpdated: Date.now(),
 })
 export class SubState extends EntityState<Sub> {
+  static postsFromSubInOrder(subName: string) {
+    return createSelector([PostState.entities, SubState.entities], (posts: SubPost[], ids: string[]) => {
+      return ids.map((id: string) => posts.find((subPost: SubPost) => subPost.id === id))
+    });
+  }
+
+  // @Selector() static postsFromSubInOrder(state: SubPost[], sub: Sub[]) {
+  //   const order = sub[0].ids;
+  //   return order.map((id: string) => state.find((subPost: SubPost) => subPost.id === id))
+  // }
+
+
   // @Select(SubState.size) count$: Observable<number>;
   // @Select(SubState.entities) toDos$: Observable<Sub[]>;
   // @Select(SubState.active) active$: Observable<Sub>;
@@ -52,39 +61,27 @@ export class SubState extends EntityState<Sub> {
   // @Select(SubState.latestId) latestId$: Observable<string>;
   // @Select(SubState.latest) latest$: Observable<Sub>;
 
-  constructor(
-    private readService: ReadService
-  ) {
-    super(SubState, 'link', IdStrategy.EntityIdGenerator);
+  constructor(private readService: ReadService) {
+    super(SubState, 'subName', IdStrategy.EntityIdGenerator);
   }
 
   @Action(SubPostsGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubPostsGetCall): void {
-  this.readService.getSubreddit(subName).subscribe(
-    (posts: SubPost[]) => { ctx.dispatch([
-      // new SubPostsGetSuccess({ subName, posts })
-      new CreateOrReplace<SubPost>(PostState, posts)
-    ]);},
-    (error: Error) => { ctx.dispatch(new SubPostsGetFailure()); },
-    () => {})
+    this.readService.getSubreddit(subName).subscribe(
+      (posts: SubPost[]) => ctx.dispatch(new SubPostsGetSuccess({ subName, posts })),
+      (error: Error) => ctx.dispatch(new SubPostsGetFailure())
+    );
   }
 
   @Action(SubPostsGetSuccess) subPostsGetSuccess(ctx: StateContext<Sub>, { payload } : SubPostsGetSuccess): void {
     const { subName, posts } = payload;
-    console.log(posts);
     const sub: Sub = {
-      link: 'peter',
+      subName,
       isLoading: false,
-      isActive: true,
-      // ids: posts.map((post: SubPost) => post.id)
+      ids: posts.map((post: SubPost) => post.id)
     };
-    // const todo: ToDo = {
-    //   description: subName,
-    //   title: subName,
-    //   done: true
-    // }
     ctx.dispatch([
-      // new CreateOrReplace(SubState, sub)
-      new Add(PostState, posts)
+      new CreateOrReplace(SubState, sub),
+      new CreateOrReplace(PostState, posts)
     ]);
   }
 }
