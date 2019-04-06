@@ -13,7 +13,7 @@ import {
   SetLoading, SetPageSize,
   Update,
   UpdateActive
-} from '@libs/entity/src';
+} from '../../../entity/src';
 
 @Component({
   selector: 'app-root',

@@ -2,12 +2,12 @@ import { Component, OnDestroy } from '@angular/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { SubPostsGetCall, SubState } from './sub.store';
+import { SubPostsGetCall, SubState } from '@web/src/app/store/sub.store';
 import { AuthState } from '@libs/auth/src/lib/auth.store';
 import { filter, map } from 'rxjs/operators';
 import { SubPost } from '@web/src/app/models/subreddit-listing';
 import { ReadService } from '@web/src/app/read.service';
-import { PostState } from '@web/src/app/post.store';
+import { PostState } from '@web/src/app/store/post.store';
 
 @Component({
   selector: 'web-sub',
@@ -41,7 +41,6 @@ export class SubComponent implements OnDestroy {
     combineLatest(this.router.events, this.isAppTokenValid$)
       .pipe(filter(([event, isValid]) => event instanceof NavigationEnd && isValid))
       .subscribe((pair: any[]) => {
-        console.log("TRIGGER!");
         this.store.dispatch(new SubPostsGetCall(pair[0].url));
       }
     );

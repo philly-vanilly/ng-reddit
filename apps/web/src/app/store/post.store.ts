@@ -8,10 +8,6 @@ import { SubPost } from '@web/src/app/models/subreddit-listing';
 })
 export class PostState extends EntityState<SubPost> {
   constructor() {
-    super(
-      PostState,
-      'id',
-      IdStrategy.EntityIdGenerator
-    );
+    super(PostState, 'id', IdStrategy.EntityIdGenerator);
   }
 }
