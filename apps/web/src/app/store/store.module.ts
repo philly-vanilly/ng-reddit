@@ -28,7 +28,7 @@ const states = [PostState, SubState];
       disabled: environment.production
     }),
     NgxsLoggerPluginModule.forRoot({
-      disabled: environment.production,
+      disabled: true, // environment.production,
       collapsed: true,
       logger: console
     }),
