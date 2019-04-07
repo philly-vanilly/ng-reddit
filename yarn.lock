@@ -117,6 +117,12 @@
   dependencies:
     tslib "^1.9.0"
 
+"@angular/cdk-experimental@^7.3.7":
+  version "7.3.7"
+  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-7.3.7.tgz#c7e52aa07368ec5ab37bf8064571aadefd734b99"
+  dependencies:
+    tslib "^1.7.1"
+
 "@angular/cdk@^7.3.6":
   version "7.3.6"
   resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-7.3.6.tgz#4c330cacd11df4adade6c1cd3ed587745f9912fd"

@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  align-self: center;
+}
+
+mat-card {
+  height: 200px;
+  margin: 2em;
+  max-width: 1000px;
+  //transition: all 0.5s ease-in-out;
+
+}
+
+img {
+  width: 20%;
+  padding-left: 1em;
+}
+
+.viewport {
+  width: 100%;
+  background: #C4BBB8;
+  //margin: 2em 8em 8em;
+}
+
+.handset {
+  mat-card {
+    margin: 2em 0 2em 0;
+  }
+}

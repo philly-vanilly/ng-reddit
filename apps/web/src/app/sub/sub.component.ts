@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
@@ -12,7 +12,7 @@ import { tap } from 'rxjs/internal/operators/tap';
   selector: 'web-sub',
   template: `
     <ng-container *ngIf="subs$ | activeSub : subName | async as sub">
-        <pre *ngFor="let post of sub.posts">{{ post | json }}</pre>
+      <ui-card-scroller [posts]="sub.posts"></ui-card-scroller>
     </ng-container>
   `,
   styles: [``],
