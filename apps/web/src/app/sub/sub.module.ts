@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SubComponent } from './sub.component';
 import { ReadService } from '@web/src/app/read.service';
+import { ActiveSubPipe } from '@web/src/app/sub/active-sub.pipe';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { ReadService } from '@web/src/app/read.service';
       ]
     )
   ],
-  declarations: [SubComponent],
+  declarations: [SubComponent, ActiveSubPipe],
   providers: [
     ReadService
   ]

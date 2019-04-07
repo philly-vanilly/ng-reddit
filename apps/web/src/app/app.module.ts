@@ -9,8 +9,9 @@ import { environment } from '../environments/environment';
 import { AuthModule, InitialAuthService } from '@libs/auth/src';
 import { ReadService } from './read.service';
 import { UiMatHeaderModule } from '@libs/ui/organism/ui-mat-header/src';
-import { StoreModule } from '@web/src/app/store/store.module';
+import { StoreModule } from '@web/src/app/store.module';
 import { AppRoutingModule } from '@web/src/app/app-routing.module';
+import { ActiveSubPipe } from './sub/active-sub.pipe';
 
 
 const authConfig: AuthConfig = {

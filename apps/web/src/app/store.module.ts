@@ -1,5 +1,4 @@
-import { PostState } from '@web/src/app/store/post.store';
-import { SubState } from '@web/src/app/store/sub.store';
+import { SubState } from '@web/src/app/sub/sub.store';
 import { NgModule } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsStoragePluginModule, StorageOption } from '@ngxs/storage-plugin';
@@ -8,7 +7,7 @@ import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 
-const states = [PostState, SubState];
+const states = [SubState];
 
 @NgModule({
   imports: [

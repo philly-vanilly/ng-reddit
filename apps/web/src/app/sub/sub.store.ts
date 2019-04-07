@@ -1,9 +1,17 @@
-import { Action, createSelector, Select, Selector, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext, Store } from '@ngxs/store';
 import { type } from '@libs/utils/src';
 import { SubPost } from '../models/subreddit-listing';
 import { ReadService } from '../read.service';
-import { CreateOrReplace, defaultEntityState, EntityState, EntityStateModel, IdStrategy } from '@libs/entity/src';
-import { PostState } from '@web/src/app/store/post.store';
+import {
+  Add,
+  CreateOrReplace,
+  defaultEntityState,
+  EntityState,
+  EntityStateModel,
+  IdStrategy,
+  Update
+} from '@libs/entity/src';
+import { mergeMap } from 'rxjs/internal/operators/mergeMap';
 
 export class SubPostsGetCall {
   static readonly type = type('[Sub] PostsGetCall');
@@ -12,17 +20,17 @@ export class SubPostsGetCall {
 
 export class SubPostsGetSuccess {
   static readonly type = type('[Sub] PostsGetSuccess');
-  constructor(public payload: {subName: string; posts: SubPost[];}){}
+  constructor(public nameAndPosts: {subName: string; posts: SubPost[];}){}
 }
 
 export class SubPostsGetFailure {
   static readonly type = type('[Sub] PostsGetFailure');
+  constructor(public error: Error) {}
 }
 
 export interface Sub {
   subName: string;
-  isLoading: boolean;
-  ids: string[];
+  posts: SubPost[];
 }
 
 @State<EntityStateModel<Sub>>({
@@ -39,18 +47,6 @@ export interface Sub {
   // lastUpdated: Date.now(),
 })
 export class SubState extends EntityState<Sub> {
-  static postsFromSubInOrder(subName: string) {
-    return createSelector([PostState.entities, SubState.entities], (posts: SubPost[], ids: string[]) => {
-      return ids.map((id: string) => posts.find((subPost: SubPost) => subPost.id === id))
-    });
-  }
-
-  // @Selector() static postsFromSubInOrder(state: SubPost[], sub: Sub[]) {
-  //   const order = sub[0].ids;
-  //   return order.map((id: string) => state.find((subPost: SubPost) => subPost.id === id))
-  // }
-
-
   // @Select(SubState.size) count$: Observable<number>;
   // @Select(SubState.entities) toDos$: Observable<Sub[]>;
   // @Select(SubState.active) active$: Observable<Sub>;
@@ -61,28 +57,32 @@ export class SubState extends EntityState<Sub> {
   // @Select(SubState.latestId) latestId$: Observable<string>;
   // @Select(SubState.latest) latest$: Observable<Sub>;
 
-  constructor(private readService: ReadService) {
+  constructor(
+    private readService: ReadService,
+    private store: Store
+  ) {
     super(SubState, 'subName', IdStrategy.EntityIdGenerator);
   }
 
   @Action(SubPostsGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubPostsGetCall): void {
-    this.readService.getSubreddit(subName).subscribe(
+    this.store.dispatch(new Add(SubState, { subName, posts: []})).pipe(
+      mergeMap(() => this.readService.getSubreddit(subName))
+    ).subscribe(
       (posts: SubPost[]) => ctx.dispatch(new SubPostsGetSuccess({ subName, posts })),
-      (error: Error) => ctx.dispatch(new SubPostsGetFailure())
-    );
+      (error: Error) => ctx.dispatch(new SubPostsGetFailure(error)));
   }
 
-  @Action(SubPostsGetSuccess) subPostsGetSuccess(ctx: StateContext<Sub>, { payload } : SubPostsGetSuccess): void {
-    const { subName, posts } = payload;
-    const sub: Sub = {
-      subName,
-      isLoading: false,
-      ids: posts.map((post: SubPost) => post.id)
-    };
-    ctx.dispatch([
-      new CreateOrReplace(SubState, sub),
-      new CreateOrReplace(PostState, posts)
-    ]);
+  @Action(SubPostsGetSuccess) subPostsGetSuccess(ctx: StateContext<Sub>, { nameAndPosts } : SubPostsGetSuccess): void {
+    const { subName, posts } = nameAndPosts;
+    this.store.dispatch(new Update(
+      SubState,
+      (sub: Sub) => sub.subName === subName,
+      (sub: Sub) => ({...sub, posts: [...sub.posts, ...posts]})
+    ));
+  }
+
+  @Action(SubPostsGetFailure) subPostsGetFailure(ctx: StateContext<Sub>, { error } : SubPostsGetFailure): void {
+    console.error(error);
   }
 }
 

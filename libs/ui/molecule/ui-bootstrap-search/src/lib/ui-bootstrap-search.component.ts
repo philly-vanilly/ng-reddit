@@ -15,7 +15,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   templateUrl: './ui-bootstrap-search.component.html',
   styleUrls: ['./ui-bootstrap-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // TODO: change to ShadowDom when this isuue is fixed: https://github.com/angular/material2/issues/15606
+  // TODO: change to ShadowDom when this issue is fixed: https://github.com/angular/material2/issues/15606
 })
 export class UiBootstrapSearchComponent {
   @Input() autocompleteOptions$: Observable<HeaderAutocompleteOptions>;
