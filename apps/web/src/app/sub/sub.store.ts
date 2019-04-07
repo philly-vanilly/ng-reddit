@@ -4,7 +4,6 @@ import { SubPost } from '../models/subreddit-listing';
 import { ReadService } from '../read.service';
 import {
   Add,
-  CreateOrReplace,
   defaultEntityState,
   EntityState,
   EntityStateModel,
