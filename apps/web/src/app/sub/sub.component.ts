@@ -11,9 +11,8 @@ import { tap } from 'rxjs/internal/operators/tap';
 @Component({
   selector: 'web-sub',
   template: `
-    <ng-container *ngIf="subs$ | activeSub : subName | async as post">
-      <!--      <pre *ngFor="let post of posts">{{ post | json }}</pre>-->
-      <pre>{{ post | json }}</pre>
+    <ng-container *ngIf="subs$ | activeSub : subName | async as sub">
+        <pre *ngFor="let post of sub.posts">{{ post | json }}</pre>
     </ng-container>
   `,
   styles: [``],
@@ -32,7 +31,7 @@ export class SubComponent implements OnDestroy {
     private readService: ReadService,
     private store: Store
   ) {
-    this.handleRouteChanges(); // to get initial routing subscribe before OnInit
+    this.handleRouteChanges(); // to get initial routing subscribe in constructor instead of OnInit
   }
 
   ngOnDestroy(): void {

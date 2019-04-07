@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { SubComponent } from './sub.component';
 import { ReadService } from '@web/src/app/read.service';
 import { ActiveSubPipe } from '@web/src/app/sub/active-sub.pipe';
+import { UiCardScrollerModule } from '@libs/ui/organism/ui-card-scroller/src';
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import { ActiveSubPipe } from '@web/src/app/sub/active-sub.pipe';
           pathMatch: 'full'
         }
       ]
-    )
+    ),
+    UiCardScrollerModule
   ],
   declarations: [SubComponent, ActiveSubPipe],
   providers: [

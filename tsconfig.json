@@ -26,7 +26,10 @@
       "@ng-reddit/ui/molecule/ui-bootstrap-search": [
         "libs/ui/molecule/ui-bootstrap-search/src/index.ts"
       ],
-      "@ng-reddit/entity": ["libs/entity/src/index.ts"]
+      "@ng-reddit/entity": ["libs/entity/src/index.ts"],
+      "@ng-reddit/ui/organism/ui-card-scroller": [
+        "libs/ui/organism/ui-card-scroller/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
