@@ -1,5 +1,5 @@
 import { Listing } from './listing-response.model';
-import { PostModel } from '@libs/shared-models/src';
+import { Post } from '@libs/shared-models/src';
 
 export interface MediaEmbed {
   content: string;
@@ -160,5 +160,5 @@ export interface Preview {
 
 export interface SubredditListingModel extends Listing {
   kind: 't3';
-  data: PostModel;
+  data: Post;
 }

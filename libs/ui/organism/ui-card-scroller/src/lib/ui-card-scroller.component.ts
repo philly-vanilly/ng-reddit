@@ -8,7 +8,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { PostModel } from '@libs/shared-models/src';
+import { Post } from '@libs/shared-models/src';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
@@ -36,7 +36,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 })
 export class UiCardScrollerComponent implements OnInit {
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
-  @Input() posts: PostModel[]; // TODO: make own ui-specific model
+  @Input() posts: Post[]; // TODO: make own ui-specific model
   @Input() headerHeight = 50;
   @Output() offset = new EventEmitter<number>();
   isHandset = false;

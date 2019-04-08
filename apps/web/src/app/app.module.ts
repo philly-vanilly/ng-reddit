@@ -11,8 +11,6 @@ import { ReadService } from './read.service';
 import { UiMatHeaderModule } from '@libs/ui/organism/ui-mat-header/src';
 import { StoreModule } from '@web/src/app/store.module';
 import { AppRoutingModule } from '@web/src/app/app-routing.module';
-import { ActiveSubPipe } from './sub/active-sub.pipe';
-
 
 const authConfig: AuthConfig = {
   redditAuthURI: environment.redditAuthURI,

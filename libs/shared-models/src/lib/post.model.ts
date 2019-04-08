@@ -1,7 +1,7 @@
-import { Gildings, MediaEmbed, Preview, SecureMedia, SecureMediaEmbed } from '@web/src/app/models/subreddit-listing.model';
+import { Gildings, MediaEmbed, Preview, SecureMedia, SecureMediaEmbed } from '@libs/shared-models/src/lib/subreddit-listing.model';
 
-export interface PostModel {
-  crosspost_parent_list: PostModel[];
+export interface Post {
+  crosspost_parent_list: Post[];
   crosspost_parent: string;
   approved_at_utc?: any;
   subreddit: string;
