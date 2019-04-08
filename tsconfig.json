@@ -29,7 +29,8 @@
       "@ng-reddit/entity": ["libs/entity/src/index.ts"],
       "@ng-reddit/ui/organism/ui-card-scroller": [
         "libs/ui/organism/ui-card-scroller/src/index.ts"
-      ]
+      ],
+      "@ng-reddit/shared-models": ["libs/shared-models/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,4 +1,4 @@
-import { Listing } from './listing-response';
+import { Listing } from './listing-response.model';
 
 export interface LinkListingChild {
   notification_level: string;
@@ -88,7 +88,7 @@ export interface LinkListingChild {
   content_category: string;
 }
 
-export interface LinkListing extends Listing {
+export interface LinkListingModel extends Listing {
   kind: 't5';
   data: LinkListingChild;
 }

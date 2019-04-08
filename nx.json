@@ -34,6 +34,9 @@
     },
     "ui-card-scroller": {
       "tags": ["lib", "ui", "organism"]
+    },
+    "shared-models": {
+      "tags": ["lib", "shared-models"]
     }
   }
 }

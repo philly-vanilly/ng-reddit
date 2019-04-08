@@ -17,7 +17,7 @@ export interface ListingData {
   before: string;
 }
 
-export interface ListingResponse {
+export interface ListingResponseModel {
   kind: 'Listing';
   data: ListingData;
 }

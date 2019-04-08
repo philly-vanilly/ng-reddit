@@ -1,25 +1,18 @@
-:host {
-  display: flex;
-  align-self: center;
+.ui-card-scroller_container {
 }
 
 mat-card {
-  height: 200px;
   margin: 2em;
-  max-width: 1000px;
   //transition: all 0.5s ease-in-out;
-
 }
 
 img {
   width: 20%;
-  padding-left: 1em;
+  //padding-left: 1em;
 }
 
-.viewport {
+.ui-card-scroller_viewport {
   width: 100%;
-  background: #C4BBB8;
-  //margin: 2em 8em 8em;
 }
 
 .handset {

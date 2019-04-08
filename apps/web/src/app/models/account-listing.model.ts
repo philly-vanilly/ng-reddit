@@ -1,4 +1,4 @@
-import { Listing } from './listing-response';
+import { Listing } from './listing-response.model';
 
 export interface SubredditInAccount {
   default_set: boolean;
@@ -133,7 +133,7 @@ export interface AccountListingChild {
   user_is_subscriber?: boolean;
 }
 
-export interface AccountListing extends Listing {
+export interface AccountListingModel extends Listing {
   kind: 't2';
   data: AccountListingChild;
 }

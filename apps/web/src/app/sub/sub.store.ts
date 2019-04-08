@@ -1,15 +1,8 @@
 import { Action, State, StateContext, Store } from '@ngxs/store';
 import { type } from '@libs/utils/src';
-import { SubPost } from '../models/subreddit-listing';
+import { PostModel } from '@libs/shared-models/src';
 import { ReadService } from '../read.service';
-import {
-  Add,
-  defaultEntityState,
-  EntityState,
-  EntityStateModel,
-  IdStrategy,
-  Update
-} from '@libs/entity/src';
+import { Add, defaultEntityState, EntityState, EntityStateModel, IdStrategy, Update } from '@libs/entity/src';
 import { mergeMap } from 'rxjs/internal/operators/mergeMap';
 
 export class SubPostsGetCall {
@@ -19,7 +12,7 @@ export class SubPostsGetCall {
 
 export class SubPostsGetSuccess {
   static readonly type = type('[Sub] PostsGetSuccess');
-  constructor(public nameAndPosts: {subName: string; posts: SubPost[];}){}
+  constructor(public nameAndPosts: {subName: string; posts: PostModel[];}){}
 }
 
 export class SubPostsGetFailure {
@@ -29,7 +22,7 @@ export class SubPostsGetFailure {
 
 export interface Sub {
   subName: string;
-  posts: SubPost[];
+  posts: PostModel[];
 }
 
 @State<EntityStateModel<Sub>>({
@@ -67,7 +60,7 @@ export class SubState extends EntityState<Sub> {
     this.store.dispatch(new Add(SubState, { subName, posts: []})).pipe(
       mergeMap(() => this.readService.getSubreddit(subName))
     ).subscribe(
-      (posts: SubPost[]) => ctx.dispatch(new SubPostsGetSuccess({ subName, posts })),
+      (posts: PostModel[]) => ctx.dispatch(new SubPostsGetSuccess({ subName, posts })),
       (error: Error) => ctx.dispatch(new SubPostsGetFailure(error)));
   }
 

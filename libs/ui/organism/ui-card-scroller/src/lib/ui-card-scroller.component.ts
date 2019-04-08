@@ -1,28 +1,44 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
-import { SubPost } from '@web/src/app/models/subreddit-listing';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
+import { PostModel } from '@libs/shared-models/src';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'ui-card-scroller',
-  template: `    
+  template: `
+    <div class="ui-card-scroller_container">
       <cdk-virtual-scroll-viewport
-        [style.height]="'calc(100vh - 50px)'"
-        itemSize="200"
-        class="viewport"
+        [style.height]="viewportHeight"
         [class.handset]="isHandset"
+        (scrolledIndexChange)="onScrollIndexChange($event)"
+        itemSize="478"
+        class="ui-card-scroller_viewport"
       >
-        <mat-card *cdkVirtualFor="let post of posts" matRipple [style.height]="'auto'">
+        <mat-card *cdkVirtualFor="let post of posts" [style.height]="'auto'">
           <mat-card-title>{{post.title}}</mat-card-title>
           <img mat-card-image [src]="post.thumbnail" [alt]="post.url">
           <mat-card-content>Author {{post.author}}</mat-card-content>
         </mat-card>
       </cdk-virtual-scroll-viewport>
+    </div>
   `,
   styleUrls: ['./ui-card-scroller.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiCardScrollerComponent implements OnInit {
-  @Input() posts: SubPost[]; // TODO: make own ui-specific model
+  @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+  @Input() posts: PostModel[]; // TODO: make own ui-specific model
+  @Input() headerHeight = 50;
+  @Output() offset = new EventEmitter<number>();
   isHandset = false;
 
   constructor(
@@ -38,4 +54,17 @@ export class UiCardScrollerComponent implements OnInit {
   ngOnInit() {
   }
 
+  get viewportHeight(): string {
+    return `calc(100vh - ${this.headerHeight}px)`;
+  }
+
+  onScrollIndexChange($event: number) {
+     const end = this.viewport.getRenderedRange().end;
+     const total = this.viewport.getDataLength();
+
+     if (end === total) {
+       console.log("END REACHED + " + this.viewport.getRenderedRange() + " " + this.viewport.getDataLength());
+       this.offset.emit(10);
+     }
+  }
 }
