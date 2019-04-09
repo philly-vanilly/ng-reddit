@@ -11,8 +11,12 @@ import { tap } from 'rxjs/internal/operators/tap';
 @Component({
   selector: 'web-sub',
   template: `
-    <ng-container *ngIf="subs$ | activeSub : subName | async as sub">
-      <ui-card-scroller [posts]="sub.posts"></ui-card-scroller>
+    <ng-container *ngIf="subName">
+      <ui-card-scroller
+        [sub$]="subs$ | activeSub : subName"
+        [postsLength]="(subs$ | activeSub : subName | async)?.posts.length"
+        (scrollEndReached)="fetchPostsIfNeeded()"
+      ></ui-card-scroller>
     </ng-container>
   `,
   styles: [``],
@@ -20,6 +24,7 @@ import { tap } from 'rxjs/internal/operators/tap';
 })
 export class SubComponent implements OnDestroy {
   @Select(SubState.entities) subs$: Observable<Sub[]>;
+  @Select(SubState.size) size$: Observable<number>;
   @Select(AuthState.isAppTokenValid) private isAppTokenValid$: Observable<boolean>;
 
   subName: string;
@@ -45,7 +50,10 @@ export class SubComponent implements OnDestroy {
         filter(([event, isValid]) => event instanceof NavigationEnd && isValid),
         map((pair: any[]) => (pair[0] as NavigationEnd).url.replace('/r/', '')),
         tap((subName: string) => this.subName = subName),
-        tap((subName: string) => this.store.dispatch(new SubPostsGetCall(subName)))
       ).subscribe();
+  }
+
+  fetchPostsIfNeeded() {
+    this.store.dispatch(new SubPostsGetCall(this.subName));
   }
 }

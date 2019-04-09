@@ -3,7 +3,7 @@ import { getDateWithSecondsOffset, isTokenStillValidInSeconds } from '@libs/auth
 
 describe('AuthUtility', () => {
   describe('getDateWithSecondsOffset', () => {
-    it('should return same date-string when no offset', () => {
+    it('should return same date-string when no scrollEndReached', () => {
       const dateString = '2019-04-04T05:26:42.478Z';
       const expectedDate = new Date(dateString);
 
@@ -12,7 +12,7 @@ describe('AuthUtility', () => {
       expect(result).toBe(dateString);
     });
 
-    it('should return date-string from the past with negative offset', () => {
+    it('should return date-string from the past with negative scrollEndReached', () => {
       const expectedDate = new Date();
 
       const result: string = getDateWithSecondsOffset(-10, expectedDate).toJSON();
@@ -20,7 +20,7 @@ describe('AuthUtility', () => {
       expect(Date.parse(result)).toBeLessThan(expectedDate.getTime());
     });
 
-    it('should return date-string from the future with positive offset', () => {
+    it('should return date-string from the future with positive scrollEndReached', () => {
       const expectedDate = new Date();
 
       const result: string = getDateWithSecondsOffset(10, expectedDate).toJSON();
@@ -74,7 +74,7 @@ describe('AuthUtility', () => {
       expect(isTokenStillValidInSeconds(token, 0)).toBeFalsy();
     });
 
-    it('should return false because too long positive offset', () => {
+    it('should return false because too long positive scrollEndReached', () => {
       const token: AuthAppStateModel | AuthUserStateModel = {
         accessToken: 'anything',
         expiration: getDateWithSecondsOffset(10).toJSON()
@@ -83,7 +83,7 @@ describe('AuthUtility', () => {
       expect(isTokenStillValidInSeconds(token, 20)).toBeFalsy();
     });
 
-    it('should return true because negative offset (was valid in the past?)', () => {
+    it('should return true because negative scrollEndReached (was valid in the past?)', () => {
       const token: AuthAppStateModel | AuthUserStateModel = {
         accessToken: 'anything',
         expiration: getDateWithSecondsOffset(0).toJSON()

@@ -6,17 +6,17 @@ import { Add, defaultEntityState, EntityState, EntityStateModel, IdStrategy, Upd
 import { mergeMap } from 'rxjs/internal/operators/mergeMap';
 
 export class SubPostsGetCall {
-  static readonly type = type('[Sub] PostsGetCall');
-  constructor(public subName: string) {}
+  static readonly type = type('[Post] GetCall');
+  constructor(public subName: string,) {}
 }
 
 export class SubPostsGetSuccess {
-  static readonly type = type('[Sub] PostsGetSuccess');
+  static readonly type = type('[Post] GetSuccess');
   constructor(public nameAndPosts: {subName: string; posts: Post[];}){}
 }
 
 export class SubPostsGetFailure {
-  static readonly type = type('[Sub] PostsGetFailure');
+  static readonly type = type('[Post] GetFailure');
   constructor(public error: Error) {}
 }
 
@@ -26,7 +26,7 @@ export interface Sub {
 }
 
 @State<EntityStateModel<Sub>>({
-  name: 'sub',
+  name: 'post',
   defaults: defaultEntityState()
   // FROM DEFAULT:
   // entities: {},
@@ -57,6 +57,7 @@ export class SubState extends EntityState<Sub> {
   }
 
   @Action(SubPostsGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubPostsGetCall): void {
+    // if (this.store.selectSnapshot<SubState>(subState => subState.))
     this.store.dispatch(new Add(SubState, { subName, posts: []})).pipe(
       mergeMap(() => this.readService.getSubreddit(subName))
     ).subscribe(

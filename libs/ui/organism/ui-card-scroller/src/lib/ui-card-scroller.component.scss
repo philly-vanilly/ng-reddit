@@ -1,4 +1,6 @@
 .ui-card-scroller_container {
+  overflow-y: auto;
+  overflow-anchor: none;
 }
 
 mat-card {
@@ -6,9 +8,8 @@ mat-card {
   //transition: all 0.5s ease-in-out;
 }
 
-img {
-  width: 20%;
-  //padding-left: 1em;
+.ui-card-scroller_image-container {
+  object-fit: scale-down;
 }
 
 .ui-card-scroller_viewport {

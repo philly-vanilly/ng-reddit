@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
   name: 'activeSub'
 })
 export class ActiveSubPipe implements PipeTransform {
-  transform(subs$: Observable<Sub[]>, subName: string): any {
+  transform(subs$: Observable<Sub[]>, subName: string): Observable<Sub> {
     return subs$.pipe(map((subs: Sub[]) => subs ? subs.find((sub: Sub) => sub.subName === subName) : undefined));
   }
 
