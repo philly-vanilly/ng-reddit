@@ -17,7 +17,7 @@ import { UiCardScrollerModule } from '@libs/ui/organism/ui-card-scroller/src';
         },
         {
           path: '**',
-          redirectTo: '',
+          redirectTo: 'all',
           pathMatch: 'full'
         }
       ]

@@ -6,8 +6,9 @@ import { environment } from '@web/src/environments/environment';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { PostState } from '@web/src/app/sub/post.store';
 
-const states = [SubState];
+const states = [SubState, PostState];
 
 @NgModule({
   imports: [

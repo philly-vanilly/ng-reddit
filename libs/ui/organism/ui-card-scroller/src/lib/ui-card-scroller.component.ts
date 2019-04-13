@@ -13,11 +13,13 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Observable, Subject } from 'rxjs';
 import { Sub } from '@web/src/app/sub/sub.store';
 import { map, takeUntil } from 'rxjs/operators';
+import { Post } from '@libs/shared-models/src';
 
 @Component({
   selector: 'ui-card-scroller',
   template: `    
 <div class="ui-card-scroller_container">
+  <mat-progress-bar *ngIf="(sub$ | async)?.isLoading" mode="query"></mat-progress-bar>
   <cdk-virtual-scroll-viewport
     [style.height]="viewportHeight"
     [class.handset]="isHandset"
@@ -25,16 +27,15 @@ import { map, takeUntil } from 'rxjs/operators';
     itemSize="100"
     class="ui-card-scroller_viewport"
   >
-<!--    <ng-container *ngIf="(sub$ | async).posts; let posts">-->
-    <mat-card *cdkVirtualFor="let post of (sub$ | async)?.postIDs" [style.height.px]="100">
-<!--      <mat-card-title>{{post.title}}</mat-card-title>-->
+    <mat-card *cdkVirtualFor="let postID of (sub$ | async)?.postIDs" [style.height.px]="100">
+      <mat-card-title>{{ (postsMap$ | async)[postID].title}}</mat-card-title>
 <!--      <img mat-card-image-->
 <!--           [src]="post.thumbnail"-->
 <!--           [style.height.px]="post.thumbnail_height"-->
 <!--           [style.width.px]="post.thumbnail_width"-->
 <!--           [alt]="post.url"-->
 <!--      >-->
-      <mat-card-content>ID {{post}}</mat-card-content>
+      <mat-card-content>ID {{postID}}</mat-card-content>
     </mat-card>
   </cdk-virtual-scroll-viewport>
 </div>
@@ -45,6 +46,7 @@ import { map, takeUntil } from 'rxjs/operators';
 export class UiCardScrollerComponent implements OnInit, OnDestroy {
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
   @Input() sub$: Observable<Sub>;
+  @Input() postsMap$: Observable<{ [name: string]: Post }>;
   @Input() offsetTop = 0;
   @Input() headerHeight = 0;
   @Output() scrollEndReached = new EventEmitter<number>();

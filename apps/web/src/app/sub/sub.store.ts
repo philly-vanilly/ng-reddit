@@ -2,19 +2,28 @@ import { Action, Select, State, StateContext, Store } from '@ngxs/store';
 import { type } from '@libs/utils/src';
 import { Post } from '@libs/shared-models/src';
 import { ReadService } from '../read.service';
-import { Add, defaultEntityState, EntityState, EntityStateModel, IdStrategy, Update } from '@libs/entity/src';
+import {
+  Add,
+  CreateOrReplace,
+  defaultEntityState,
+  EntityState,
+  EntityStateModel,
+  IdStrategy,
+  Update
+} from '@libs/entity/src';
 import { mergeMap } from 'rxjs/internal/operators/mergeMap';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Listing, ListingResponseModel } from '@libs/shared-models/src/lib/listing-response.model';
+import { PostState } from '@web/src/app/sub/post.store';
 
-export class SubPostsGetCall {
-  static readonly type = type('[Post] GetCall');
+export class SubGetCall {
+  static readonly type = type('[Sub] GetCall');
   constructor(public subName: string,) {}
 }
 
-export class SubPostsGetFailure {
-  static readonly type = type('[Post] GetFailure');
+export class SubGetFailure {
+  static readonly type = type('[Sub] GetFailure');
   constructor(public error: Error) {}
 }
 
@@ -26,7 +35,7 @@ export interface Sub {
 }
 
 @State<EntityStateModel<Sub>>({
-  name: 'post',
+  name: 'sub',
   defaults: defaultEntityState()
 })
 export class SubState extends EntityState<Sub> {
@@ -39,33 +48,45 @@ export class SubState extends EntityState<Sub> {
     super(SubState, 'subName', IdStrategy.EntityIdGenerator);
   }
 
-  @Action(SubPostsGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubPostsGetCall): void {
+  @Action(SubGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubGetCall): void {
     const handleResponse$ = map((lrm: ListingResponseModel) => {
-        const listings: Listing[] = lrm.data.children;
-        this.store.dispatch(new Update(SubState, (sub: Sub) => sub.subName === subName, (sub: Sub) => {
+      const listings: Listing[] = lrm.data.children;
+      const posts: Post[] = listings.map((listing: Listing) => (listing.data as Post));
+
+      posts.forEach(post => {
+        if (post.subreddit !== subName) {
+          console.log("EXPECTED " + subName + " BUT GOT " + post.subreddit);
+        }
+      });
+
+      this.store.dispatch([
+        new Update(SubState, (current: Sub) => current.subName === subName, (current: Sub) => {
           return {
-            ...sub,
-            postIDs: [...sub.postIDs, ...listings.map((listing: Listing) => (listing.data as Post).name)],
+            ...current,
+            postIDs: [...current.postIDs, ...posts.map((post: Post) => post.name)],
             isLoading: false,
             after: lrm.data.after
           } as Sub;
-        }));
-      },
-      (error: Error) => ctx.dispatch(new SubPostsGetFailure(error)));
+        }),
+        new CreateOrReplace(PostState, posts)
+      ]);
+      }, (error: Error) => ctx.dispatch(new SubGetFailure(error)));
 
     this.subs$.pipe(take(1)).subscribe(subs => {
       const sub: Sub = subs[subName];
       if (!sub) {
-        this.store.dispatch(new Add(SubState, { subName, postIDs: [], after: undefined, isLoading: false}))
+        this.store.dispatch(new Add(SubState, { subName, postIDs: [], after: undefined, isLoading: true}))
           .pipe(mergeMap(() => this.readService.getInitialListing('r', subName, 'new')
-            .pipe(handleResponse$))).subscribe()
+            .pipe(handleResponse$))).subscribe();
       } else {
-        this.readService.getSubsequentListing(sub.after, sub.postIDs.length).pipe(handleResponse$).subscribe()
+        this.store.dispatch(new Update(SubState, (current: Sub) => current.subName === subName, (current: Sub) => ({...current, isLoading: true})))
+          .pipe(mergeMap(() => this.readService.getSubsequentListingFull('r', subName, 'new', sub.after, sub.postIDs.length)
+            .pipe(handleResponse$))).subscribe()
       }
     });
   }
 
-  @Action(SubPostsGetFailure) subPostsGetFailure(ctx: StateContext<Sub>, { error } : SubPostsGetFailure): void {
+  @Action(SubGetFailure) subPostsGetFailure(ctx: StateContext<Sub>, { error } : SubGetFailure): void {
     console.error(error);
   }
 }
