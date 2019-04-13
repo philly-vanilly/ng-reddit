@@ -22,19 +22,19 @@ import { map, takeUntil } from 'rxjs/operators';
     [style.height]="viewportHeight"
     [class.handset]="isHandset"
     (scrolledIndexChange)="onScrollIndexChange()"
-    itemSize="400"
+    itemSize="100"
     class="ui-card-scroller_viewport"
   >
 <!--    <ng-container *ngIf="(sub$ | async).posts; let posts">-->
-    <mat-card *cdkVirtualFor="let post of (sub$ | async)?.posts" [style.height.px]="400">
-      <mat-card-title>{{post.title}}</mat-card-title>
-      <img mat-card-image
-           [src]="post.thumbnail"
-           [style.height.px]="post.thumbnail_height"
-           [style.width.px]="post.thumbnail_width"
-           [alt]="post.url"
-      >
-      <mat-card-content>Author {{post.author}}</mat-card-content>
+    <mat-card *cdkVirtualFor="let post of (sub$ | async)?.postIDs" [style.height.px]="100">
+<!--      <mat-card-title>{{post.title}}</mat-card-title>-->
+<!--      <img mat-card-image-->
+<!--           [src]="post.thumbnail"-->
+<!--           [style.height.px]="post.thumbnail_height"-->
+<!--           [style.width.px]="post.thumbnail_width"-->
+<!--           [alt]="post.url"-->
+<!--      >-->
+      <mat-card-content>ID {{post}}</mat-card-content>
     </mat-card>
   </cdk-virtual-scroll-viewport>
 </div>
@@ -52,12 +52,12 @@ export class UiCardScrollerComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<any>();
 
   constructor(
-    private breakpointObserver: BreakpointObserver,
+    public breakpointObserver: BreakpointObserver,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.breakpointObserver.observe([Breakpoints.Handset]).pipe(
+    this.breakpointObserver.observe([Breakpoints.Handset]).pipe( // TODO: move this into a pipe
       takeUntil(this.destroy$),
       map(result => {
         this.isHandset = result.matches;

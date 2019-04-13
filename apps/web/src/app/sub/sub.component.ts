@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { Sub, SubPostsGetCall, SubState } from '@web/src/app/sub/sub.store';
 import { AuthState } from '@libs/auth/src/lib/auth.store';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators';
 import { ReadService } from '@web/src/app/read.service';
 import { tap } from 'rxjs/internal/operators/tap';
 import { HEADER_HEIGHT } from '@web/src/app/app.injection-tokens';
@@ -16,20 +16,19 @@ import { HEADER_HEIGHT } from '@web/src/app/app.injection-tokens';
       <ui-card-scroller
         [sub$]="subs$ | activeSub : subName"
         [offsetTop]="headerHeight"
-        (scrollEndReached)="fetchPostsIfNeeded()"
+        (scrollEndReached)="fetchPostsIfNeeded$.next($event)"
       ></ui-card-scroller>
     </ng-container>
   `,
   styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SubComponent implements OnDestroy {
+export class SubComponent implements OnInit, OnDestroy {
   @Select(SubState.entities) subs$: Observable<Sub[]>;
   @Select(AuthState.isAppTokenValid) private isAppTokenValid$: Observable<boolean>;
-
-  subName: string;
-
+  fetchPostsIfNeeded$ = new Subject<number>();
   destroy$ = new Subject();
+  subName: string;
 
   constructor(
     @Inject(HEADER_HEIGHT) public headerHeight,
@@ -38,6 +37,14 @@ export class SubComponent implements OnDestroy {
     private store: Store
   ) {
     this.handleRouteChanges(); // to get initial routing subscribe in constructor instead of OnInit
+  }
+
+  ngOnInit(): void {
+    this.fetchPostsIfNeeded$.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      tap(() =>  this.store.dispatch(new SubPostsGetCall(this.subName)))
+    ).subscribe()
   }
 
   ngOnDestroy(): void {
@@ -54,7 +61,4 @@ export class SubComponent implements OnDestroy {
       ).subscribe();
   }
 
-  fetchPostsIfNeeded() {
-    this.store.dispatch(new SubPostsGetCall(this.subName));
-  }
 }
