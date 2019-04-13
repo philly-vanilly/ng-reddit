@@ -11,6 +11,7 @@ import { ReadService } from './read.service';
 import { UiMatHeaderModule } from '@libs/ui/organism/ui-mat-header/src';
 import { StoreModule } from '@web/src/app/store.module';
 import { AppRoutingModule } from '@web/src/app/app-routing.module';
+import { HEADER_HEIGHT } from '@web/src/app/app.injection-tokens';
 
 const authConfig: AuthConfig = {
   redditAuthURI: environment.redditAuthURI,
@@ -44,14 +45,9 @@ const handleInitialAuth = (initialAuthService: InitialAuthService): Function => 
       deps: [InitialAuthService],
       multi: true
     },
-    {
-      provide: AuthConfig,
-      useValue: authConfig
-    },
-    {
-      provide: HAMMER_GESTURE_CONFIG,
-      useClass: GestureConfig
-    },
+    { provide: HEADER_HEIGHT, useValue: '50' },
+    { provide: AuthConfig, useValue: authConfig },
+    { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
     ReadService
   ],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy } from '@angular/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
@@ -7,6 +7,7 @@ import { AuthState } from '@libs/auth/src/lib/auth.store';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { ReadService } from '@web/src/app/read.service';
 import { tap } from 'rxjs/internal/operators/tap';
+import { HEADER_HEIGHT } from '@web/src/app/app.injection-tokens';
 
 @Component({
   selector: 'web-sub',
@@ -14,7 +15,7 @@ import { tap } from 'rxjs/internal/operators/tap';
     <ng-container *ngIf="subName">
       <ui-card-scroller
         [sub$]="subs$ | activeSub : subName"
-        [postsLength]="(subs$ | activeSub : subName | async)?.posts.length"
+        [offsetTop]="headerHeight"
         (scrollEndReached)="fetchPostsIfNeeded()"
       ></ui-card-scroller>
     </ng-container>
@@ -31,6 +32,7 @@ export class SubComponent implements OnDestroy {
   destroy$ = new Subject();
 
   constructor(
+    @Inject(HEADER_HEIGHT) public headerHeight,
     private router: Router,
     private readService: ReadService,
     private store: Store

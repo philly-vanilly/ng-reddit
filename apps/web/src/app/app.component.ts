@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ReadService } from '@web/src/app/read.service';
 import { Router } from '@angular/router';
@@ -6,10 +6,20 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import { HeaderAutocompleteOptions } from '@libs/ui/organism/ui-mat-header/src';
 import { UserLoginCall } from '@libs/auth/src';
 import { Store } from '@ngxs/store';
+import { HEADER_HEIGHT } from '@web/src/app/app.injection-tokens';
 
 @Component({
   selector: 'web-app',
-  templateUrl: './app.component.html',
+  template: `
+  <ui-mat-header
+    (inputModelChange)="headerInputModelChange($event)"
+    (formSubmit)="headerInputFormSubmit($event)"
+    (userButtonClicked)="userButtonClicked()"
+    [autocompleteOptions$]="autocompleteOptions$"
+   ></ui-mat-header>
+  <div [style.height.px]="headerHeight"></div>
+  <router-outlet></router-outlet>
+  `,
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -18,6 +28,7 @@ export class AppComponent implements OnDestroy {
   private destroy$ = new Subject();
 
   constructor(
+    @Inject(HEADER_HEIGHT) public headerHeight,
     public readService: ReadService,
     private router: Router,
     private store: Store
@@ -38,7 +49,7 @@ export class AppComponent implements OnDestroy {
     this.router.navigate(subPath);
   }
 
-  userButtonClicked($event: any) {
+  userButtonClicked() {
     this.store.dispatch(new UserLoginCall());
   }
 }

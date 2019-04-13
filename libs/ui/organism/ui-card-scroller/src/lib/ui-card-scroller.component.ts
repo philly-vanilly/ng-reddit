@@ -3,19 +3,16 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
+  Input, OnDestroy,
   OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { Observable } from 'rxjs';
-import { IDatasource } from 'ngx-ui-scroll';
+import { Observable, Subject } from 'rxjs';
 import { Sub } from '@web/src/app/sub/sub.store';
-import { filter } from 'rxjs/internal/operators/filter';
-import { take } from 'rxjs/operators';
-import { tap } from 'rxjs/internal/operators/tap';
+import { map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'ui-card-scroller',
@@ -45,31 +42,36 @@ import { tap } from 'rxjs/internal/operators/tap';
   styleUrls: ['./ui-card-scroller.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UiCardScrollerComponent implements OnInit {
+export class UiCardScrollerComponent implements OnInit, OnDestroy {
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
   @Input() sub$: Observable<Sub>;
-  @Input() postsLength = 0;
-  @Input() headerHeight = 50;
+  @Input() offsetTop = 0;
+  @Input() headerHeight = 0;
   @Output() scrollEndReached = new EventEmitter<number>();
   isHandset = false;
-
-
+  private destroy$ = new Subject<any>();
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private cdr: ChangeDetectorRef
-  ) {
-    breakpointObserver.observe([Breakpoints.HandsetLandscape, Breakpoints.HandsetPortrait]).subscribe(result => {
-      this.isHandset = result.matches;
-      this.cdr.markForCheck();
-    });
+  ) {}
+
+  ngOnInit(): void {
+    this.breakpointObserver.observe([Breakpoints.Handset]).pipe(
+      takeUntil(this.destroy$),
+      map(result => {
+        this.isHandset = result.matches;
+        this.cdr.markForCheck();
+      })
+    ).subscribe();
   }
-  ngOnInit() {
-    // this.scrollEndReached.emit(1);
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   get viewportHeight(): string {
-    return `calc(100vh - ${this.headerHeight}px)`;
+    return `calc(100vh - ${this.offsetTop}px)`;
   }
 
   onScrollIndexChange() {

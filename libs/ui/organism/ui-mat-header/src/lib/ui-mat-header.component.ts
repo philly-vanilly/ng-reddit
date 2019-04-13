@@ -9,7 +9,7 @@ import { HeaderAutocompleteOptions } from '@libs/ui/organism/ui-mat-header/src';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiMatHeaderComponent {
-  @Input() autocompleteOptions$: Observable<HeaderAutocompleteOptions>;
+  @Input() autocompleteOptions$: Observable<HeaderAutocompleteOptions[]>;
   @Output() inputModelChange = new EventEmitter<string>();
   @Output() formSubmit = new EventEmitter<any>();
   @Output() userButtonClicked = new EventEmitter<any>();
