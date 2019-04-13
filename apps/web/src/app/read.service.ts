@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ListingResponseModel } from '@libs/shared-models/src/lib/listing-response.model';
+import { ListingKind, ListingResponseModel, SortBy } from '@libs/shared-models/src/lib/listing-response.model';
 import { AccountListingModel } from '@libs/shared-models/src/lib/account-listing.model';
 import { LinkListingModel } from '@libs/shared-models/src/lib/link-listing.model';
 import { SubredditListingModel } from '@libs/shared-models/src/lib/subreddit-listing.model';
@@ -40,8 +40,17 @@ export class ReadService {
     );
   }
 
-  getSubreddit(subName: string): Observable<Post[]> {
-    const reqUrl = `https://oauth.reddit.com/r/${subName}/hot`;
+  getInitialListing(rootPath: string, listingId: string, sortBy: SortBy): Observable<Post[]> {
+    const reqUrl = `https://oauth.reddit.com/${rootPath}/${listingId}/${sortBy}`;
+    return this.fetchListing(reqUrl);
+  }
+
+  getSubsequentListing(after: string, count: number): Observable<Post[]>  {
+    const reqUrl = `https://oauth.reddit.com?after=${after}&count=${count}`;
+    return this.fetchListing(reqUrl);
+  }
+
+  private fetchListing(reqUrl: string): Observable<Post[]> {
     return this.http.get<ListingResponseModel>(reqUrl).pipe(
       map((res: ListingResponseModel) => (res.data.children as SubredditListingModel[])
         .map((listing: SubredditListingModel) => listing.data))

@@ -1,9 +1,11 @@
-import { Action, State, StateContext, Store } from '@ngxs/store';
+import { Action, Select, State, StateContext, Store } from '@ngxs/store';
 import { type } from '@libs/utils/src';
 import { Post } from '@libs/shared-models/src';
 import { ReadService } from '../read.service';
 import { Add, defaultEntityState, EntityState, EntityStateModel, IdStrategy, Update } from '@libs/entity/src';
 import { mergeMap } from 'rxjs/internal/operators/mergeMap';
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 export class SubPostsGetCall {
   static readonly type = type('[Post] GetCall');
@@ -23,6 +25,8 @@ export class SubPostsGetFailure {
 export interface Sub {
   subName: string;
   posts: Post[];
+  after: string;
+  isLoading: boolean;
 }
 
 @State<EntityStateModel<Sub>>({
@@ -40,7 +44,8 @@ export interface Sub {
 })
 export class SubState extends EntityState<Sub> {
   // @Select(SubState.size) count$: Observable<number>;
-  // @Select(SubState.entities) toDos$: Observable<Sub[]>;
+  @Select(SubState.entitiesMap) subs$: Observable<{[name: string] : Sub}>;
+
   // @Select(SubState.active) active$: Observable<Sub>;
   // @Select(SubState.activeId) activeId$: Observable<string>;
   // @Select(SubState.keys) keys$: Observable<string[]>;
@@ -57,12 +62,24 @@ export class SubState extends EntityState<Sub> {
   }
 
   @Action(SubPostsGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubPostsGetCall): void {
-    // if (this.store.selectSnapshot<SubState>(subState => subState.))
-    this.store.dispatch(new Add(SubState, { subName, posts: []})).pipe(
-      mergeMap(() => this.readService.getSubreddit(subName))
-    ).subscribe(
+    const getInitial$ = this.readService.getInitialListing('r', subName, 'new').pipe(map(
       (posts: Post[]) => ctx.dispatch(new SubPostsGetSuccess({ subName, posts })),
-      (error: Error) => ctx.dispatch(new SubPostsGetFailure(error)));
+      (error: Error) => ctx.dispatch(new SubPostsGetFailure(error)))
+    );
+
+    this.subs$.pipe(take(1)).subscribe(subs => {
+      const sub: Sub = subs[subName];
+      if (!sub) {
+        this.store.dispatch(new Add(SubState, { subName, posts: [], after: undefined, isLoading: false}))
+          .pipe(mergeMap(() => getInitial$)).subscribe()
+      } else {
+        console.log(Object.keys(sub));
+        this.readService.getSubsequentListing(sub.after, Object.keys(sub.posts).length).pipe(map(
+          (posts: Post[]) => ctx.dispatch(new SubPostsGetSuccess({ subName, posts })),
+          (error: Error) => ctx.dispatch(new SubPostsGetFailure(error)))
+        ).subscribe()
+      }
+    });
   }
 
   @Action(SubPostsGetSuccess) subPostsGetSuccess(ctx: StateContext<Sub>, { nameAndPosts } : SubPostsGetSuccess): void {
@@ -70,7 +87,14 @@ export class SubState extends EntityState<Sub> {
     this.store.dispatch(new Update(
       SubState,
       (sub: Sub) => sub.subName === subName,
-      (sub: Sub) => ({...sub, posts: [...sub.posts, ...posts]})
+      (sub: Sub) => {
+        sub.posts.forEach(existingPost => {
+          if (posts.find(newPost => newPost.id === existingPost.id)) {
+            throw new Error(`The post with the id ${existingPost.id} already exists!`);
+          }
+        });
+        return {...sub, posts: [...sub.posts, ...posts], isLoading: false,  };
+      }
     ));
   }
 

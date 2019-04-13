@@ -24,7 +24,6 @@ import { tap } from 'rxjs/internal/operators/tap';
 })
 export class SubComponent implements OnDestroy {
   @Select(SubState.entities) subs$: Observable<Sub[]>;
-  @Select(SubState.size) size$: Observable<number>;
   @Select(AuthState.isAppTokenValid) private isAppTokenValid$: Observable<boolean>;
 
   subName: string;

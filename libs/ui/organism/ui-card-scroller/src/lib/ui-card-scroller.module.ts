@@ -13,9 +13,9 @@ import { UiScrollModule } from 'ngx-ui-scroll';
     CommonModule, // async pipe
     MatCardModule,
     LayoutModule,
-    UiScrollModule
-    // ScrollingModule,
-    // ExperimentalScrollingModule
+    UiScrollModule,
+    ScrollingModule,
+    ExperimentalScrollingModule
   ],
   declarations: [UiCardScrollerComponent],
   exports: [UiCardScrollerComponent]
