@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
@@ -41,9 +41,10 @@ export class SubComponent implements OnInit, OnDestroy {
     @Inject(HEADER_HEIGHT) public headerHeight,
     private router: Router,
     private readService: ReadService,
-    private store: Store
+    private store: Store,
+    private cdr: ChangeDetectorRef
   ) {
-    // to get initial routing subscribe in constructor instead of OnInit; might not work with SSR though
+    // to get initial routing subscribe in constructor instead of OnInit; might not work with SSR!
     this.handleRouteChanges();
   }
 
@@ -61,6 +62,7 @@ export class SubComponent implements OnInit, OnDestroy {
       filter(([event, isValid]) => event instanceof NavigationEnd && isValid),
       map((pair: any[]) => (pair[0] as NavigationEnd).url.replace('/r/', '')),
       tap((subName: string) => this.subName = subName),
+      tap(() => this.cdr.markForCheck())
     ).subscribe();
   }
 

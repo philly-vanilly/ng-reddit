@@ -16,7 +16,6 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Listing, ListingResponseModel } from '@libs/shared-models/src/lib/listing-response.model';
 import { PostState } from '@web/src/app/sub/post.store';
-import { Router } from '@angular/router';
 
 export class SubGetCall {
   static readonly type = type('[Sub] GetCall');
@@ -45,7 +44,6 @@ export class SubState extends EntityState<Sub> {
   constructor(
     private readService: ReadService,
     private store: Store,
-    private router: Router
   ) {
     super(SubState, 'subName', IdStrategy.EntityIdGenerator);
   }

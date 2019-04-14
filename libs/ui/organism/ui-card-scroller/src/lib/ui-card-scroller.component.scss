@@ -1,4 +1,6 @@
 .ui-card-scroller_progress-bar {
+  // TODO: move into header and make being shown only on slow internet connection
+  // https://www.npmjs.com/package/ng-connection-service
   position: fixed;
   top: 0;
   left:0;
