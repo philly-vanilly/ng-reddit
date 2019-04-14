@@ -41,6 +41,10 @@ export class ReadService {
     );
   }
 
+  getSubredditStylesheet(subName: string): Observable<StylesheetResponseModel> {
+    return this.http.get<StylesheetResponseModel>(`https://www.reddit.com/r/${subName}/about/stylesheet.json`)
+  }
+
   getInitialListing(rootPath: string, listingId: string, sortBy: SortBy): Observable<ListingResponseModel> {
     const reqUrl = `https://oauth.reddit.com/${rootPath}/${listingId}/${sortBy}?raw_json=1`;
     return this.fetchListing(reqUrl);
@@ -54,4 +58,21 @@ export class ReadService {
     const reqUrl = `https://oauth.reddit.com/${rootPath}/${listingId}/${sortBy}?after=${after}&count=${count}&raw_json=1`;
     return this.fetchListing(reqUrl);
   }
+}
+
+export interface Image {
+  url: string;
+  link: string;
+  name: string;
+}
+
+export interface Stylesheet {
+  images: Image[];
+  subreddit_id: string;
+  stylesheet: string;
+}
+
+export interface StylesheetResponseModel {
+  kind: "stylesheet";
+  data: Stylesheet;
 }

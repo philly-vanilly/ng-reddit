@@ -21,20 +21,20 @@ import { Post } from '@libs/shared-models/src';
       [style.height]="viewportHeight"
       [class.handset]="isHandset"
       (scrolledIndexChange)="onScrollIndexChange()"
-      [itemSize]="itemHeight"
+      itemSize="300"
       class="ui-card-scroller_viewport"
     >
-      <mat-card *cdkVirtualFor="let post of (posts$ | async); trackBy: trackByFn" [style.height.px]="itemHeight" class="ui-card-scroller_card">
+      <mat-card *cdkVirtualFor="let post of (posts$ | async)" [style.height.px]="300" class="ui-card-scroller_card">
         <mat-card-header>
-          <img mat-card-avatar [src]="post.thumbnail" *ngIf="!!post.thumbnail">
+          <img mat-card-avatar [src]="post.thumbnail">
           <mat-card-title>{{ post.title }}</mat-card-title>
           <mat-card-subtitle>{{ post.author }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content [innerHTML]="post.selftext_html"></mat-card-content>
-          <mat-card-actions>
-            <button mat-button>LIKE</button>
-            <button mat-button>SHARE</button>
-          </mat-card-actions>
+        <mat-card-actions>
+          <button mat-button>LIKE</button>
+          <button mat-button>SHARE</button>
+        </mat-card-actions>
       </mat-card>
     </cdk-virtual-scroll-viewport>
   `,
@@ -45,7 +45,6 @@ export class UiCardScrollerComponent implements OnInit, OnDestroy {
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
   @Input() posts$: Observable<Post[]>;
   @Input() offsetTop = 0;
-  @Input() itemHeight = 300;
   @Output() scrollEndReached = new EventEmitter<number>();
   isHandset = false;
   // change to getter or offsetTop to observable if offset can change dynamically
@@ -70,10 +69,6 @@ export class UiCardScrollerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
-  }
-
-  trackByFn(index: number, post: Post) {
-    return index; // post.name seems to cause problems
   }
 
   onScrollIndexChange() {

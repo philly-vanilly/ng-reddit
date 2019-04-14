@@ -372,17 +372,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/shared-models/tsconfig.lib.json",
-              "libs/shared-models/tsconfig.spec.json"
+              "libs/shared-models/tsconfig.lib.json"
             ],
             "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared-models/jest.config.js",
-            "tsConfig": "libs/shared-models/tsconfig.spec.json"
           }
         }
       },

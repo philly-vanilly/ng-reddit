@@ -17,15 +17,21 @@ import { map, take } from 'rxjs/operators';
 import { Listing, ListingResponseModel } from '@libs/shared-models/src/lib/listing-response.model';
 import { PostState } from '@web/src/app/sub/post.store';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs/internal/operators/tap';
 
-export class SubGetCall {
-  static readonly type = type('[Sub] GetCall');
+export class SubPostsGetCall {
+  static readonly type = type('[Sub] PostsGetCall');
   constructor(public subName: string,) {}
 }
 
-export class SubGetFailure {
-  static readonly type = type('[Sub] GetFailure');
+export class SubPostsGetFailure {
+  static readonly type = type('[Sub] PostsGetFailure');
   constructor(public error: Error) {}
+}
+
+export class SubStylesheetGetCall {
+  static readonly type = type('[Sub] StylesheetGetCall');
+  constructor(public subName: string) {}
 }
 
 export interface Sub {
@@ -33,6 +39,8 @@ export interface Sub {
   postIDs: string[];
   after: string;
   isLoading: boolean;
+  stylesheet?: string;
+  images?: any[];
 }
 
 @State<EntityStateModel<Sub>>({
@@ -50,7 +58,7 @@ export class SubState extends EntityState<Sub> {
     super(SubState, 'subName', IdStrategy.EntityIdGenerator);
   }
 
-  @Action(SubGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubGetCall): void {
+  @Action(SubPostsGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubPostsGetCall): void {
     const handleResponse$ = map((lrm: ListingResponseModel) => {
       const listings: Listing[] = lrm.data.children;
 
@@ -70,7 +78,8 @@ export class SubState extends EntityState<Sub> {
           } as Sub;
         }),
         new CreateOrReplace(PostState, posts)
-      ]);}, (error: Error) => ctx.dispatch(new SubGetFailure(error)));
+      ]).pipe(tap(() => this.store.dispatch(new SubStylesheetGetCall(subName))));
+      }, (error: Error) => ctx.dispatch(new SubPostsGetFailure(error)));
 
     this.subs$.pipe(take(1)).subscribe(subs => {
       const sub: Sub = subs[subName];
@@ -86,7 +95,7 @@ export class SubState extends EntityState<Sub> {
     });
   }
 
-  @Action(SubGetFailure) subPostsGetFailure(ctx: StateContext<Sub>, { error } : SubGetFailure): void {
+  @Action(SubPostsGetFailure) subPostsGetFailure(ctx: StateContext<Sub>, { error } : SubPostsGetFailure): void {
     console.error(error);
   }
 }

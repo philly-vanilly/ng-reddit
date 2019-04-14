@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestro
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { Sub, SubGetCall, SubState } from '@web/src/app/sub/sub.store';
+import { Sub, SubPostsGetCall, SubState } from '@web/src/app/sub/sub.store';
 import { AuthState } from '@libs/auth/src/lib/auth.store';
 import { distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators';
 import { ReadService } from '@web/src/app/read.service';
@@ -69,7 +69,7 @@ export class SubComponent implements OnInit, OnDestroy {
     this.scrollEndReached$.pipe(
       takeUntil(this.destroy$),
       distinctUntilChanged(),
-      tap(() =>  this.store.dispatch(new SubGetCall(this.subName)))
+      tap(() =>  this.store.dispatch(new SubPostsGetCall(this.subName)))
     ).subscribe()
   }
 }

@@ -5,7 +5,6 @@ import { ScrollingModule as ExperimentalScrollingModule } from '@angular/cdk-exp
 import { MatButtonModule, MatCardModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
-import { UiScrollModule } from 'ngx-ui-scroll';
 
 
 @NgModule({
@@ -14,7 +13,6 @@ import { UiScrollModule } from 'ngx-ui-scroll';
     MatCardModule,
     MatButtonModule,
     LayoutModule,
-    UiScrollModule,
     ScrollingModule,
     ExperimentalScrollingModule
   ],

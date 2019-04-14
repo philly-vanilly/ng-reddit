@@ -6,6 +6,7 @@ import { ReadService } from '@web/src/app/read.service';
 import { Router } from '@angular/router';
 import { MockComponent, MockModule } from 'ng-mocks';
 import { UiMatHeaderComponent } from '@libs/ui/organism/ui-mat-header/src/lib/ui-mat-header.component';
+import { HEADER_HEIGHT } from '@web/src/app/app.injection-tokens';
 
 describe('AppComponent', () => {
   beforeEach(
@@ -16,8 +17,9 @@ describe('AppComponent', () => {
           MockComponent(UiMatHeaderComponent)
         ],
         providers: [
-          {provide: ReadService, useValue: jest.fn()},
-          {provide: Router, useValue: jest.fn()},
+          { provide: ReadService, useValue: jest.fn() },
+          { provide: Router, useValue: jest.fn() },
+          { provide: HEADER_HEIGHT, useValue: '50' },
         ],
         imports: [
           RouterTestingModule, // needed for <router-outlet> (injected Router can be mocked)
