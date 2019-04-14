@@ -18,27 +18,25 @@ import { Post } from '@libs/shared-models/src';
 @Component({
   selector: 'ui-card-scroller',
   template: `    
-<div class="ui-card-scroller_container">
-  <mat-progress-bar *ngIf="(sub$ | async)?.isLoading" mode="query"></mat-progress-bar>
-  <cdk-virtual-scroll-viewport
-    [style.height]="viewportHeight"
-    [class.handset]="isHandset"
-    (scrolledIndexChange)="onScrollIndexChange()"
-    itemSize="100"
-    class="ui-card-scroller_viewport"
-  >
-    <mat-card *cdkVirtualFor="let postID of (sub$ | async)?.postIDs" [style.height.px]="100">
-      <mat-card-title>{{ (postsMap$ | async)[postID].title}}</mat-card-title>
+<mat-progress-bar *ngIf="(sub$ | async)?.isLoading" mode="query" class="ui-card-scroller_progress-bar"></mat-progress-bar>
+<cdk-virtual-scroll-viewport
+  [style.height]="viewportHeight"
+  [class.handset]="isHandset"
+  (scrolledIndexChange)="onScrollIndexChange()"
+  itemSize="100"
+  class="ui-card-scroller_viewport"
+>
+  <mat-card *cdkVirtualFor="let postID of (sub$ | async)?.postIDs" [style.height.px]="100">
+    <mat-card-title>{{ (postsMap$ | async)[postID].title}}</mat-card-title>
 <!--      <img mat-card-image-->
 <!--           [src]="post.thumbnail"-->
 <!--           [style.height.px]="post.thumbnail_height"-->
 <!--           [style.width.px]="post.thumbnail_width"-->
 <!--           [alt]="post.url"-->
 <!--      >-->
-      <mat-card-content>ID {{postID}}</mat-card-content>
-    </mat-card>
-  </cdk-virtual-scroll-viewport>
-</div>
+    <mat-card-content>ID {{postID}}</mat-card-content>
+  </mat-card>
+</cdk-virtual-scroll-viewport>
   `,
   styleUrls: ['./ui-card-scroller.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

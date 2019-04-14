@@ -1,6 +1,9 @@
-.ui-card-scroller_container {
-  overflow-y: auto;
-  overflow-anchor: none;
+.ui-card-scroller_progress-bar {
+  position: fixed;
+  top: 0;
+  left:0;
+  right: 0;
+  z-index: 20;
 }
 
 mat-card {

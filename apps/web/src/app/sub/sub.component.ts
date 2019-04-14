@@ -14,6 +14,9 @@ import { Post } from '@libs/shared-models/src';
 @Component({
   selector: 'web-sub',
   template: `
+    <ng-template #subredditNotFound>
+      <h1>404 - not found</h1>
+    </ng-template>
     <ng-container *ngIf="subName">
       <ui-card-scroller
         [sub$]="subsMap$ | activeSub : subName"
