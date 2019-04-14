@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule } from '@angular/router';
-import { NotFoundComponent } from '@web/src/app/not-found.component';
 
 const routes = [
   {

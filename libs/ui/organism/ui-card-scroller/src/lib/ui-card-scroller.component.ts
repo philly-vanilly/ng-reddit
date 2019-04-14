@@ -24,15 +24,17 @@ import { Post } from '@libs/shared-models/src';
       [itemSize]="itemHeight"
       class="ui-card-scroller_viewport"
     >
-      <mat-card *cdkVirtualFor="let post of (posts$ | async); trackBy: trackByFn" [style.height.px]="itemHeight">
-        <mat-card-title>{{ post.title}}</mat-card-title>
-        <img mat-card-image
-             [src]="post.thumbnail"
-             [style.height.px]="post.thumbnail_height"
-             [style.width.px]="post.thumbnail_width"
-             [alt]="post.url"
-        >
-        <mat-card-content>ID {{post.name}}</mat-card-content>
+      <mat-card *cdkVirtualFor="let post of (posts$ | async); trackBy: trackByFn" [style.height.px]="itemHeight" class="ui-card-scroller_card">
+        <mat-card-header>
+          <img mat-card-avatar [src]="post.thumbnail" *ngIf="!!post.thumbnail">
+          <mat-card-title>{{ post.title }}</mat-card-title>
+          <mat-card-subtitle>{{ post.author }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content [innerHTML]="post.selftext_html"></mat-card-content>
+          <mat-card-actions>
+            <button mat-button>LIKE</button>
+            <button mat-button>SHARE</button>
+          </mat-card-actions>
       </mat-card>
     </cdk-virtual-scroll-viewport>
   `,

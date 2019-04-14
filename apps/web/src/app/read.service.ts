@@ -42,7 +42,7 @@ export class ReadService {
   }
 
   getInitialListing(rootPath: string, listingId: string, sortBy: SortBy): Observable<ListingResponseModel> {
-    const reqUrl = `https://oauth.reddit.com/${rootPath}/${listingId}/${sortBy}`;
+    const reqUrl = `https://oauth.reddit.com/${rootPath}/${listingId}/${sortBy}?raw_json=1`;
     return this.fetchListing(reqUrl);
   }
 
@@ -51,7 +51,7 @@ export class ReadService {
   }
 
   getSubsequentListingFull(rootPath: string, listingId: string, sortBy: SortBy, after: string, count: number) {
-    const reqUrl = `https://oauth.reddit.com/${rootPath}/${listingId}/${sortBy}?after=${after}&count=${count}`;
+    const reqUrl = `https://oauth.reddit.com/${rootPath}/${listingId}/${sortBy}?after=${after}&count=${count}&raw_json=1`;
     return this.fetchListing(reqUrl);
   }
 }

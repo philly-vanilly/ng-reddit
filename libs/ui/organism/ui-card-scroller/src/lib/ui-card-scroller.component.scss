@@ -1,14 +1,9 @@
-mat-card {
-  margin: 2em;
-  //transition: all 0.5s ease-in-out;
-}
-
-.ui-card-scroller_image-container {
-  object-fit: scale-down;
-}
-
 .ui-card-scroller_viewport {
   width: 100%;
+}
+
+.ui-card-scroller_card {
+  margin: 2em;
 }
 
 .handset {
