@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { UiCardScrollerComponent } from './ui-card-scroller.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ScrollingModule as ExperimentalScrollingModule } from '@angular/cdk-experimental/scrolling';
-import { MatCardModule, MatProgressBarModule } from '@angular/material';
+import { MatCardModule } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { UiScrollModule } from 'ngx-ui-scroll';
@@ -14,7 +14,6 @@ import { UiScrollModule } from 'ngx-ui-scroll';
     MatCardModule,
     LayoutModule,
     UiScrollModule,
-    MatProgressBarModule,
     ScrollingModule,
     ExperimentalScrollingModule
   ],

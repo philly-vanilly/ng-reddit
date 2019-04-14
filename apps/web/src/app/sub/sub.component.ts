@@ -14,19 +14,18 @@ import { Post } from '@libs/shared-models/src';
 @Component({
   selector: 'web-sub',
   template: `
-    <ng-template #subredditNotFound>
-      <h1>404 - not found</h1>
-    </ng-template>
-    <ng-container *ngIf="subName">
-      <ui-card-scroller
-        [sub$]="subsMap$ | activeSub : subName"
-        [postsMap$]="postsMap$"
-        [offsetTop]="headerHeight"
-        (scrollEndReached)="scrollEndReached$.next($event)"
-      ></ui-card-scroller>
-    </ng-container>
+    <mat-progress-bar
+      *ngIf="(subsMap$ | activeSub : subName | async)?.isLoading"
+      mode="query"
+      class="web-sub_progress-bar"
+    ></mat-progress-bar>
+    <ui-card-scroller
+      [posts$]="subsMap$ | subsPosts : subName : postsMap$"
+      [offsetTop]="headerHeight"
+      (scrollEndReached)="scrollEndReached$.next($event)"
+    ></ui-card-scroller>
   `,
-  styles: [``],
+  styleUrls: ['./sub.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SubComponent implements OnInit, OnDestroy {

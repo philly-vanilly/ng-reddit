@@ -5,6 +5,8 @@ import { SubComponent } from './sub.component';
 import { ReadService } from '@web/src/app/read.service';
 import { ActiveSubPipe } from '@web/src/app/sub/active-sub.pipe';
 import { UiCardScrollerModule } from '@libs/ui/organism/ui-card-scroller/src';
+import { MatProgressBarModule } from '@angular/material';
+import { SubsPostsPipe } from '@web/src/app/sub/subs-posts.pipe';
 
 @NgModule({
   imports: [
@@ -22,9 +24,10 @@ import { UiCardScrollerModule } from '@libs/ui/organism/ui-card-scroller/src';
         }
       ]
     ),
-    UiCardScrollerModule
+    UiCardScrollerModule,
+    MatProgressBarModule,
   ],
-  declarations: [SubComponent, ActiveSubPipe],
+  declarations: [SubComponent, ActiveSubPipe, SubsPostsPipe],
   providers: [
     ReadService
   ]

@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Listing, ListingResponseModel } from '@libs/shared-models/src/lib/listing-response.model';
 import { PostState } from '@web/src/app/sub/post.store';
+import { Router } from '@angular/router';
 
 export class SubGetCall {
   static readonly type = type('[Sub] GetCall');
@@ -44,6 +45,7 @@ export class SubState extends EntityState<Sub> {
   constructor(
     private readService: ReadService,
     private store: Store,
+    private router: Router
   ) {
     super(SubState, 'subName', IdStrategy.EntityIdGenerator);
   }
@@ -51,6 +53,12 @@ export class SubState extends EntityState<Sub> {
   @Action(SubGetCall) subPostsGetCall(ctx: StateContext<Sub>, { subName }: SubGetCall): void {
     const handleResponse$ = map((lrm: ListingResponseModel) => {
       const listings: Listing[] = lrm.data.children;
+
+      if (!lrm.data.dist && !lrm.data.before && !lrm.data.after && !listings.length) {
+        this.router.navigate(['r', 'all']);
+        return;
+      }
+
       const posts: Post[] = listings.map((listing: Listing) => (listing.data as Post));
       this.store.dispatch([
         new Update(SubState, (current: Sub) => current.subName === subName, (current: Sub) => {

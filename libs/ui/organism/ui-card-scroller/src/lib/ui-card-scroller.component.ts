@@ -11,44 +11,44 @@ import {
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Observable, Subject } from 'rxjs';
-import { Sub } from '@web/src/app/sub/sub.store';
 import { map, takeUntil } from 'rxjs/operators';
 import { Post } from '@libs/shared-models/src';
 
 @Component({
   selector: 'ui-card-scroller',
-  template: `    
-<mat-progress-bar *ngIf="(sub$ | async)?.isLoading" mode="query" class="ui-card-scroller_progress-bar"></mat-progress-bar>
-<cdk-virtual-scroll-viewport
-  [style.height]="viewportHeight"
-  [class.handset]="isHandset"
-  (scrolledIndexChange)="onScrollIndexChange()"
-  itemSize="100"
-  class="ui-card-scroller_viewport"
->
-  <mat-card *cdkVirtualFor="let postID of (sub$ | async)?.postIDs" [style.height.px]="100">
-    <mat-card-title>{{ (postsMap$ | async)[postID].title}}</mat-card-title>
-<!--      <img mat-card-image-->
-<!--           [src]="post.thumbnail"-->
-<!--           [style.height.px]="post.thumbnail_height"-->
-<!--           [style.width.px]="post.thumbnail_width"-->
-<!--           [alt]="post.url"-->
-<!--      >-->
-    <mat-card-content>ID {{postID}}</mat-card-content>
-  </mat-card>
-</cdk-virtual-scroll-viewport>
+  template: `
+    <cdk-virtual-scroll-viewport
+      [style.height]="viewportHeight"
+      [class.handset]="isHandset"
+      (scrolledIndexChange)="onScrollIndexChange()"
+      [itemSize]="itemHeight"
+      class="ui-card-scroller_viewport"
+    >
+      <mat-card *cdkVirtualFor="let post of (posts$ | async); trackBy: trackByFn" [style.height.px]="itemHeight">
+        <mat-card-title>{{ post.title}}</mat-card-title>
+        <img mat-card-image
+             [src]="post.thumbnail"
+             [style.height.px]="post.thumbnail_height"
+             [style.width.px]="post.thumbnail_width"
+             [alt]="post.url"
+        >
+        <mat-card-content>ID {{post.name}}</mat-card-content>
+      </mat-card>
+    </cdk-virtual-scroll-viewport>
   `,
   styleUrls: ['./ui-card-scroller.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiCardScrollerComponent implements OnInit, OnDestroy {
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
-  @Input() sub$: Observable<Sub>;
-  @Input() postsMap$: Observable<{ [name: string]: Post }>;
+  @Input() posts$: Observable<Post[]>;
   @Input() offsetTop = 0;
-  @Input() headerHeight = 0;
+  @Input() itemHeight = 300;
   @Output() scrollEndReached = new EventEmitter<number>();
   isHandset = false;
+  // change to getter or offsetTop to observable if offset can change dynamically
+  viewportHeight = `calc(100vh - ${this.offsetTop}px)`;
+
   private destroy$ = new Subject<any>();
 
   constructor(
@@ -70,15 +70,13 @@ export class UiCardScrollerComponent implements OnInit, OnDestroy {
     this.destroy$.next();
   }
 
-  get viewportHeight(): string {
-    return `calc(100vh - ${this.offsetTop}px)`;
+  trackByFn(index: number, post: Post) {
+    return index; // post.name seems to cause problems
   }
 
   onScrollIndexChange() {
      const end = this.viewport.getRenderedRange().end;
      const total = this.viewport.getDataLength();
-
-    console.log("SCROLLINDEXCHANGE. END = "+end+" TOTAL = "+total);
      if (end === total) {
        this.scrollEndReached.emit(end);
      }
