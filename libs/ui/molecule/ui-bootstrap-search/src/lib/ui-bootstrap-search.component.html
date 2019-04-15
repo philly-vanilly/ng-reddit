@@ -1,3 +1,17 @@
+<ng-template #userOption let-userData="data">
+  <div class="ui-bootstrap-search_option-wrapper">
+    <img [src]="userData.subreddit.icon_img" (error)="setDefaultAvatar($event, userData.subreddit.over18)" alt="Avatar" class="ui-bootstrap-search_avatar">
+    <div>{{userData.subreddit.display_name_prefixed}}</div>
+  </div>
+</ng-template>
+
+<ng-template #subredditOption let-subData="data">
+  <div class="ui-bootstrap-search_option-wrapper">
+    <img [src]="subData.icon_img" (error)="setDefaultAvatar($event, subData.over18)" alt="Avatar" class="ui-bootstrap-search_avatar">
+    <div>{{subData.display_name_prefixed}}</div>
+  </div>
+</ng-template>
+
 <form
   [formGroup]="form"
   (ngSubmit)="formSubmit.emit(form.value.term)"
@@ -16,9 +30,10 @@
     >
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option
-        [class.ui-mat-header_options--is-user]="option.isUser"
         *ngFor="let option of autocompleteOptions$ | async"
-        [value]="option.value">{{option.value}}
+        [value]="option.isUser ? option.data.subreddit.display_name_prefixed : option.data.display_name_prefixed"
+      >
+        <ng-container *ngTemplateOutlet="option.isUser ? userOption : subredditOption; context:option"></ng-container>
       </mat-option>
     </mat-autocomplete>
   <div class="input-group-append">

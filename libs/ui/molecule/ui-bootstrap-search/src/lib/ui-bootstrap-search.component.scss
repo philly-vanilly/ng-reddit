@@ -16,6 +16,15 @@
   height: fit-content;
 }
 
-.ui-bootstrap-search_options--is-user {
-  background-color: #FCE1E5;
+.ui-bootstrap-search_option-wrapper {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.ui-bootstrap-search_avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 0.5em;
 }

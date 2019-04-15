@@ -8,10 +8,11 @@ import {
 import { RouterModule } from '@angular/router';
 import { UiMatSearchModule } from '@libs/ui/molecule/ui-mat-search/src';
 import { UiBootstrapSearchModule } from '@libs/ui/molecule/ui-bootstrap-search/src';
+import { AccountListingChild, LinkListingChild } from '@libs/shared-models/src';
 
 export interface HeaderAutocompleteOptions {
-  value: string;
   isUser: boolean;
+  data: LinkListingChild | AccountListingChild;
 }
 
 @NgModule({
