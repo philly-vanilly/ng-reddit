@@ -19,7 +19,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.url.startsWith('https://oauth.reddit.com')) {
+    if (req.url.startsWith('https://oauth.reddit.com') || req.url.startsWith('https://styles.redditmedia.com')) {
       const authAppStateModel: AuthAppStateModel = this.store.selectSnapshot<AuthAppStateModel>(state => state.auth.app);
       if (isTokenStillValidInSeconds(authAppStateModel, 30)) {
         return makeModifiedRequest(req, next, authAppStateModel.accessToken);

@@ -1,6 +1,6 @@
 <ng-template #userOption let-userData="data">
   <div class="ui-bootstrap-search_option-wrapper">
-    <img [src]="userData.subreddit.icon_img" (error)="setDefaultAvatar($event, userData.subreddit.over18)" alt="Avatar" class="ui-bootstrap-search_avatar">
+    <img [src]="userData.subreddit.icon_img" (error)="setDefaultAvatar($event, userData.subreddit.over_18)" alt="Avatar" class="ui-bootstrap-search_avatar">
     <div>{{userData.subreddit.display_name_prefixed}}</div>
   </div>
 </ng-template>

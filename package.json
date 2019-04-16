@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start-build": "http-server ./dist/apps/web",
     "hmr": "ng serve --configuration=hmr",
     "build": "ng build",
     "test": "ng test",
@@ -53,8 +54,7 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "ts-jest": "24.0.0",
-    "@angular-devkit/build-angular": "~0.13.0",
+    "@angular-devkit/build-angular": "^0.13.8",
     "@angular/cli": "7.3.1",
     "@angular/compiler-cli": "~7.2.0",
     "@angular/language-service": "^7.0.0",
@@ -71,6 +71,7 @@
     "codelyzer": "~4.5.0",
     "cypress": "^3.2.0",
     "dotenv": "6.2.0",
+    "http-server": "^0.11.1",
     "jasmine-core": "~2.99.1",
     "jasmine-marbles": "^0.4.1",
     "jasmine-spec-reporter": "~4.2.1",
@@ -83,6 +84,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "ng-mocks": "^7.7.0",
     "prettier": "1.15.2",
+    "ts-jest": "24.0.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "3.2.2"

@@ -30,7 +30,7 @@ export class UiBootstrapSearchComponent {
     });
   }
 
-  setDefaultAvatar(event, over18: boolean): void {
+  setDefaultAvatar(event, over18: boolean, name?: string): void {
     if (over18) {
       event.target.src = "https://www.redditstatic.com/desktop2x/img/avatar_over18_square.png";
     } else {
